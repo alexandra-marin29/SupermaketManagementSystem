@@ -7,6 +7,7 @@ using System.Windows;
 using Supermarket.Models;
 using Supermarket.Models.EntityLayer;
 using Supermarket.Models.BusinessLogic;
+using System.Text.RegularExpressions;
 
 namespace Supermarket.ViewModels
 {
@@ -143,7 +144,7 @@ namespace Supermarket.ViewModels
 
         private void AddUser(object parameter)
         {
-            if (!string.IsNullOrWhiteSpace(NewUsername) && !string.IsNullOrWhiteSpace(NewPassword) && !string.IsNullOrWhiteSpace(NewRole))
+            if (ValidateUserInputs(NewUsername, NewPassword, NewRole))
             {
                 User newUser = new User { Username = NewUsername, Password = NewPassword, Role = NewRole, IsActive = true };
                 userBLL.AddUser(newUser);
@@ -152,15 +153,12 @@ namespace Supermarket.ViewModels
                 NewPassword = string.Empty;
                 NewRole = string.Empty;
             }
-            else
-            {
-                MessageBox.Show("All fields must be filled.");
-            }
+          
         }
 
         private void EditUser(object parameter)
         {
-            if (SelectedUser != null)
+            if (SelectedUser != null && ValidateUserInputs(SelectedUser.Username, SelectedUser.Password, SelectedUser.Role))
             {
                 userBLL.EditUser(SelectedUser);
                 int index = Users.IndexOf(SelectedUser);
@@ -176,7 +174,28 @@ namespace Supermarket.ViewModels
                 Users.Remove(SelectedUser);
             }
         }
+        private bool ValidateUserInputs(string username, string password, string role)
+        {
+            if (string.IsNullOrWhiteSpace(username) || !Regex.IsMatch(username, @"^[a-zA-Z0-9]+$"))
+            {
+                MessageBox.Show("Username must be non-empty and contain only letters and digits.");
+                return false;
+            }
 
+            if (string.IsNullOrWhiteSpace(password) || !Regex.IsMatch(password, @"^[a-zA-Z0-9]+$"))
+            {
+                MessageBox.Show("Password must be non-empty and contain only letters and digits.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(role) || !(role == "Admin" || role == "Cashier"))
+            {
+                MessageBox.Show("Role must be either 'Admin' or 'Cashier'.");
+                return false;
+            }
+
+            return true;
+        }
         private void CloseAllWindows()
         {
             Application.Current.MainWindow?.Close();
