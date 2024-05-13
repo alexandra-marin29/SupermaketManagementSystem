@@ -1,16 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Supermarket.Models.DataAccessLayer;
+using Supermarket.Models.EntityLayer;
 
 namespace Supermarket.Models.BusinessLogic
 {
     class UserBLL
     {
-        UserDAL persoanaDAL = new UserDAL();
+        UserDAL userDAL = new UserDAL();
+
+        public List<User> GetAllUsers()
+        {
+            return userDAL.GetAllUsers();
+        }
+
+        public void AddUser(User user)
+        {
+            userDAL.AddUser(user);
+        }
+
+        public void EditUser(User user)
+        {
+            userDAL.EditUser(user);
+        }
+
+        public void DeleteUser(int userId)
+        {
+            userDAL.DeleteUser(userId);
+        }
 
         public Role GetUserByLogin(string username, string password)
         {
@@ -18,7 +34,7 @@ namespace Supermarket.Models.BusinessLogic
             {
                 return Role.None;
             }
-            return persoanaDAL.GetUserByLogin(username, password);
+            return userDAL.GetUserByLogin(username, password);
         }
     }
 }

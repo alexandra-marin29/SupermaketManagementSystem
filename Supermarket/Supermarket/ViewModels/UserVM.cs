@@ -1,33 +1,24 @@
 ﻿using Supermarket.ViewModels.Commands;
 using Supermarket.Views;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows;
 using Supermarket.Models;
 using Supermarket.Models.EntityLayer;
 using Supermarket.Models.BusinessLogic;
-using Supermarket.ViewModels;
+
 namespace Supermarket.ViewModels
 {
     public class UserVM : BasePropertyChanged
     {
         private readonly Window loginWindow;
-        UserBLL userBLL = new UserBLL();
-
-        public UserVM() { }
-
-        public UserVM(Window loginWindow)
-        {
-            this.loginWindow = loginWindow;
-            LoginCommand = new RelayCommand<object>(Login);
-        }
-
+        private UserBLL userBLL;
         private string username;
+        private string password;
+
+        public ObservableCollection<User> Users { get; set; }
+
         public string Username
         {
             get { return username; }
@@ -41,7 +32,6 @@ namespace Supermarket.ViewModels
             }
         }
 
-        private string password;
         public string Password
         {
             get { return password; }
@@ -55,12 +45,83 @@ namespace Supermarket.ViewModels
             }
         }
 
+        private string newUsername;
+        public string NewUsername
+        {
+            get { return newUsername; }
+            set
+            {
+                if (newUsername != value)
+                {
+                    newUsername = value;
+                    NotifyPropertyChanged(nameof(NewUsername));
+                }
+            }
+        }
+
+        private string newPassword;
+        public string NewPassword
+        {
+            get { return newPassword; }
+            set
+            {
+                if (newPassword != value)
+                {
+                    newPassword = value;
+                    NotifyPropertyChanged(nameof(NewPassword));
+                }
+            }
+        }
+
+        private string newRole;
+        public string NewRole
+        {
+            get { return newRole; }
+            set
+            {
+                if (newRole != value)
+                {
+                    newRole = value;
+                    NotifyPropertyChanged(nameof(NewRole));
+                }
+            }
+        }
+
+        private User selectedUser;
+        public User SelectedUser
+        {
+            get { return selectedUser; }
+            set
+            {
+                selectedUser = value;
+                NotifyPropertyChanged(nameof(SelectedUser));
+            }
+        }
+
         public ICommand LoginCommand { get; }
+        public ICommand AddUserCommand { get; }
+        public ICommand EditUserCommand { get; }
+        public ICommand DeleteUserCommand { get; }
+
+        public UserVM()
+        {
+            userBLL = new UserBLL();
+            Users = new ObservableCollection<User>(userBLL.GetAllUsers());
+            AddUserCommand = new RelayCommand<object>(AddUser);
+            EditUserCommand = new RelayCommand<object>(EditUser);
+            DeleteUserCommand = new RelayCommand<object>(DeleteUser);
+        }
+
+        public UserVM(Window loginWindow) : this()
+        {
+            this.loginWindow = loginWindow;
+            LoginCommand = new RelayCommand<object>(Login);
+        }
 
         #region Commands
         private void Login(object parameter)
         {
-            Role role = userBLL.GetUserByLogin(username, password);
+            Role role = userBLL.GetUserByLogin(Username, Password);
 
             if (role == Role.Admin)
             {
@@ -77,6 +138,42 @@ namespace Supermarket.ViewModels
             else
             {
                 MessageBox.Show("Invalid username or password.");
+            }
+        }
+
+        private void AddUser(object parameter)
+        {
+            if (!string.IsNullOrWhiteSpace(NewUsername) && !string.IsNullOrWhiteSpace(NewPassword) && !string.IsNullOrWhiteSpace(NewRole))
+            {
+                User newUser = new User { Username = NewUsername, Password = NewPassword, Role = NewRole, IsActive = true };
+                userBLL.AddUser(newUser);
+                Users.Add(newUser);
+                NewUsername = string.Empty;
+                NewPassword = string.Empty;
+                NewRole = string.Empty;
+            }
+            else
+            {
+                MessageBox.Show("All fields must be filled.");
+            }
+        }
+
+        private void EditUser(object parameter)
+        {
+            if (SelectedUser != null)
+            {
+                userBLL.EditUser(SelectedUser);
+                int index = Users.IndexOf(SelectedUser);
+                Users[index] = SelectedUser; // Update the collection
+            }
+        }
+
+        private void DeleteUser(object parameter)
+        {
+            if (SelectedUser != null)
+            {
+                userBLL.DeleteUser(SelectedUser.UserId);
+                Users.Remove(SelectedUser);
             }
         }
 

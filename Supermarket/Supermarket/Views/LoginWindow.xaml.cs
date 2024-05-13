@@ -23,7 +23,6 @@ namespace Supermarket.Views
     {
         public LoginWindow()
         {
-
             InitializeComponent();
             this.DataContext = new UserVM(this);
         }
@@ -35,6 +34,7 @@ namespace Supermarket.Views
                 viewModel.Password = ((PasswordBox)sender).Password;
             }
         }
+
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)

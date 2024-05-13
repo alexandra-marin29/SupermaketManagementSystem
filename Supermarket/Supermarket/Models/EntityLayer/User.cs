@@ -7,20 +7,21 @@ using Supermarket.Models;
 
 namespace Supermarket.Models.EntityLayer
 {
-    class User : BasePropertyChanged
+    public class User : BasePropertyChanged
     {
-        private string id;
+        private int userId;
         private string username;
         private string password;
         private string role;
+        private bool isActive;
 
-        public string Id
+        public int UserId
         {
-            get { return id; }
+            get { return userId; }
             set
             {
-                id = value;
-                NotifyPropertyChanged("Id");
+                userId = value;
+                NotifyPropertyChanged(nameof(UserId));
             }
         }
 
@@ -30,7 +31,7 @@ namespace Supermarket.Models.EntityLayer
             set
             {
                 username = value;
-                NotifyPropertyChanged("Username");
+                NotifyPropertyChanged(nameof(Username));
             }
         }
 
@@ -40,7 +41,7 @@ namespace Supermarket.Models.EntityLayer
             set
             {
                 password = value;
-                NotifyPropertyChanged("Password");
+                NotifyPropertyChanged(nameof(Password));
             }
         }
 
@@ -50,7 +51,17 @@ namespace Supermarket.Models.EntityLayer
             set
             {
                 role = value;
-                NotifyPropertyChanged("Role");
+                NotifyPropertyChanged(nameof(Role));
+            }
+        }
+
+        public bool IsActive
+        {
+            get { return isActive; }
+            set
+            {
+                isActive = value;
+                NotifyPropertyChanged(nameof(IsActive));
             }
         }
     }

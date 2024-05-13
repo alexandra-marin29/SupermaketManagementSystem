@@ -7,6 +7,110 @@
         mc:Ignorable="d"
         Title="AdminWindow" Height="450" Width="800">
     <Grid>
-        
+        <TabControl>
+            <!-- Users Tab -->
+            <TabItem Header="Users">
+                <Grid>
+                    <StackPanel>
+                        <WrapPanel Margin="10">
+                            <Label Content="Username:"/>
+                            <TextBox Width="150" Text="{Binding NewUsername, Mode=TwoWay}"/>
+                            <Label Content="Password:"/>
+                            <TextBox Width="150" Text="{Binding NewPassword, Mode=TwoWay}"/>
+                            <Label Content="Role:"/>
+                            <TextBox Width="100" Text="{Binding NewRole, Mode=TwoWay}"/>
+                            <Button Content="Add User" Width="100" Margin="5" Command="{Binding AddUserCommand}"/>
+                        </WrapPanel>
+                        <Button Content="Edit User" Width="100" Margin="5" Command="{Binding EditUserCommand}"/>
+                        <Button Content="Delete User" Width="100" Margin="5" Command="{Binding DeleteUserCommand}"/>
+                        <DataGrid x:Name="UsersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="400" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Username" Binding="{Binding Username}" />
+                                <DataGridTextColumn Header="Role" Binding="{Binding Role}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Categories Tab -->
+            <TabItem Header="Categories">
+                <Grid>
+                    <StackPanel>
+                        <Button Content="Add Category" Width="100" Margin="5"/>
+                        <Button Content="Edit Category" Width="100" Margin="5"/>
+                        <Button Content="Delete Category" Width="100" Margin="5"/>
+                        <DataGrid x:Name="CategoriesDataGrid" AutoGenerateColumns="True" Height="400"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Manufacturers Tab -->
+            <TabItem Header="Manufacturers">
+                <Grid>
+                    <StackPanel>
+                        <Button Content="Add Manufacturer" Width="100" Margin="5"/>
+                        <Button Content="Edit Manufacturer" Width="100" Margin="5"/>
+                        <Button Content="Delete Manufacturer" Width="100" Margin="5"/>
+                        <DataGrid x:Name="ManufacturersDataGrid" AutoGenerateColumns="True" Height="400"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Products Tab -->
+            <TabItem Header="Products">
+                <Grid>
+                    <StackPanel>
+                        <Button Content="Add Product" Width="100" Margin="5"/>
+                        <Button Content="Edit Product" Width="100" Margin="5"/>
+                        <Button Content="Delete Product" Width="100" Margin="5"/>
+                        <DataGrid x:Name="ProductsDataGrid" AutoGenerateColumns="True" Height="400"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Stocks Tab -->
+            <TabItem Header="Stocks">
+                <Grid>
+                    <StackPanel>
+                        <Button Content="Add Stock" Width="100" Margin="5"/>
+                        <Button Content="Edit Stock" Width="100" Margin="5"/>
+                        <Button Content="Delete Stock" Width="100" Margin="5"/>
+                        <DataGrid x:Name="StocksDataGrid" AutoGenerateColumns="True" Height="400"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Reports Tab -->
+            <TabItem Header="Reports">
+                <Grid>
+                    <StackPanel>
+                        <!-- Report 1: Products by Manufacturer -->
+                        <TextBlock Text="Select Manufacturer:" Margin="5"/>
+                        <ComboBox x:Name="ManufacturerComboBox" Width="200" Margin="5"/>
+                        <Button Content="List Products by Manufacturer" Width="200" Margin="5"/>
+                        <DataGrid x:Name="ProductsByManufacturerDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+
+                        <!-- Report 2: Category Values -->
+                        <Button Content="Show Category Values" Width="200" Margin="5"/>
+                        <DataGrid x:Name="CategoryValuesDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+
+                        <!-- Report 3: Sales by User -->
+                        <TextBlock Text="Select User:" Margin="5"/>
+                        <ComboBox x:Name="UserComboBox" Width="200" Margin="5"/>
+                        <TextBlock Text="Select Month:" Margin="5"/>
+                        <DatePicker x:Name="MonthPicker" Width="200" Margin="5"/>
+                        <Button Content="Show Sales by User" Width="200" Margin="5"/>
+                        <DataGrid x:Name="SalesByUserDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+
+                        <!-- Report 4: Largest Receipt of the Day -->
+                        <TextBlock Text="Select Date:" Margin="5"/>
+                        <DatePicker x:Name="DatePicker" Width="200" Margin="5"/>
+                        <Button Content="Show Largest Receipt" Width="200" Margin="5"/>
+                        <DataGrid x:Name="LargestReceiptDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

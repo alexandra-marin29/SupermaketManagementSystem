@@ -14,13 +14,13 @@
         <StackPanel>
             <WrapPanel Margin="10">
                 <Label Content="Username:"></Label>
-                <TextBox Width="200" Text="{Binding Username, Mode=TwoWay}"></TextBox>
+                <TextBox Width="200" Text="{Binding Username, Mode=TwoWay}" KeyDown="TextBox_KeyDown"></TextBox>
             </WrapPanel>
             <WrapPanel Margin="10">
                 <Label Content="Password: "></Label>
                 <PasswordBox Width="200" PasswordChanged="PasswordBox_PasswordChanged" KeyDown="PasswordBox_KeyDown"></PasswordBox>
             </WrapPanel>
-            <Button Width="100" Height="34" Command="{Binding LoginCommand}" >Login</Button>
+            <Button Width="100" Height="34" Command="{Binding LoginCommand}" Content="Login" />
         </StackPanel>
     </Grid>
 </Window>
