@@ -1,0 +1,26 @@
+﻿<Window x:Class="Supermarket.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:Supermarket.Views"
+        xmlns:ctx="clr-namespace:Supermarket.ViewModels"
+        mc:Ignorable="d" 
+        Title="Login" Height="200" Width="350">
+    <Window.DataContext>
+        <ctx:UserVM />
+    </Window.DataContext>
+    <Grid>
+        <StackPanel>
+            <WrapPanel Margin="10">
+                <Label Content="Username:"></Label>
+                <TextBox Width="200" Text="{Binding Username, Mode=TwoWay}"></TextBox>
+            </WrapPanel>
+            <WrapPanel Margin="10">
+                <Label Content="Password: "></Label>
+                <PasswordBox Width="200" PasswordChanged="PasswordBox_PasswordChanged" KeyDown="PasswordBox_KeyDown"></PasswordBox>
+            </WrapPanel>
+            <Button Width="100" Height="34" Command="{Binding LoginCommand}" >Login</Button>
+        </StackPanel>
+    </Grid>
+</Window>
