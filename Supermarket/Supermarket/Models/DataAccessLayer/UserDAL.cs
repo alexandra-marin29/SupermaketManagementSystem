@@ -18,8 +18,10 @@ namespace Supermarket.Models.DataAccessLayer
                     SqlCommand cmd = new SqlCommand("GetPersonByLogin", con);
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add(new SqlParameter("@usern", username));
-                    cmd.Parameters.Add(new SqlParameter("@psw", password));
+                    //avoid SQL injection
+                    cmd.Parameters.Add(new SqlParameter("@usern", SqlDbType.NVarChar)).Value = username;
+                    cmd.Parameters.Add(new SqlParameter("@psw", SqlDbType.NVarChar)).Value = password;
+
 
                     con.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -42,7 +44,6 @@ namespace Supermarket.Models.DataAccessLayer
                 }
                 catch (Exception ex)
                 {
-                    // Handle exceptions (logging, rethrowing, etc.)
                     throw new Exception("An error occurred while getting the user by login.", ex);
                 }
                 finally
