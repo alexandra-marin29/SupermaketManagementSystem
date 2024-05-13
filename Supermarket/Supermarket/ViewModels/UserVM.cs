@@ -19,6 +19,7 @@ namespace Supermarket.ViewModels
         private string password;
 
         public ObservableCollection<User> Users { get; set; }
+        public ObservableCollection<string> AvailableRoles { get; set; }
 
         public string Username
         {
@@ -108,6 +109,7 @@ namespace Supermarket.ViewModels
         {
             userBLL = new UserBLL();
             Users = new ObservableCollection<User>(userBLL.GetAllUsers());
+            AvailableRoles = new ObservableCollection<string> { "Admin", "Cashier" };
             AddUserCommand = new RelayCommand<object>(AddUser);
             EditUserCommand = new RelayCommand<object>(EditUser);
             DeleteUserCommand = new RelayCommand<object>(DeleteUser);
@@ -153,7 +155,6 @@ namespace Supermarket.ViewModels
                 NewPassword = string.Empty;
                 NewRole = string.Empty;
             }
-          
         }
 
         private void EditUser(object parameter)
@@ -174,20 +175,24 @@ namespace Supermarket.ViewModels
                 Users.Remove(SelectedUser);
             }
         }
+
         private bool ValidateUserInputs(string username, string password, string role)
         {
+            // Validate Username: only letters and digits
             if (string.IsNullOrWhiteSpace(username) || !Regex.IsMatch(username, @"^[a-zA-Z0-9]+$"))
             {
                 MessageBox.Show("Username must be non-empty and contain only letters and digits.");
                 return false;
             }
 
+            // Validate Password: only letters and digits
             if (string.IsNullOrWhiteSpace(password) || !Regex.IsMatch(password, @"^[a-zA-Z0-9]+$"))
             {
                 MessageBox.Show("Password must be non-empty and contain only letters and digits.");
                 return false;
             }
 
+            // Validate Role: must be either "Admin" or "Cashier"
             if (string.IsNullOrWhiteSpace(role) || !(role == "Admin" || role == "Cashier"))
             {
                 MessageBox.Show("Role must be either 'Admin' or 'Cashier'.");
@@ -196,6 +201,7 @@ namespace Supermarket.ViewModels
 
             return true;
         }
+
         private void CloseAllWindows()
         {
             Application.Current.MainWindow?.Close();

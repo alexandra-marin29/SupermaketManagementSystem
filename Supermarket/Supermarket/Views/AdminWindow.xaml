@@ -18,7 +18,7 @@
                             <Label Content="Password:"/>
                             <TextBox Width="150" Text="{Binding NewPassword, Mode=TwoWay}"/>
                             <Label Content="Role:"/>
-                            <TextBox Width="100" Text="{Binding NewRole, Mode=TwoWay}"/>
+                            <ComboBox Width="100" ItemsSource="{Binding AvailableRoles}" SelectedItem="{Binding NewRole, Mode=TwoWay}"/>
                             <Button Content="Add User" Width="100" Margin="5" Command="{Binding AddUserCommand}"/>
                         </WrapPanel>
                         <Button Content="Edit User" Width="100" Margin="5" Command="{Binding EditUserCommand}"/>
