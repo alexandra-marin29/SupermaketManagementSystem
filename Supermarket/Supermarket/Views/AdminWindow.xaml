@@ -32,8 +32,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            
-            <!-- Categories Tab -->
+
             <TabItem Header="Categories">
                 <Grid>
                     <StackPanel>

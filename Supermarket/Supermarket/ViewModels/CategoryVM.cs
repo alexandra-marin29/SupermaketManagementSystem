@@ -68,6 +68,8 @@ namespace Supermarket.ViewModels
                 categoryBLL.EditCategory(SelectedCategory);
                 int index = Categories.IndexOf(SelectedCategory);
                 Categories[index] = SelectedCategory;
+                NewCategoryName = string.Empty;
+                SelectedCategory = null;
             }
         }
 
