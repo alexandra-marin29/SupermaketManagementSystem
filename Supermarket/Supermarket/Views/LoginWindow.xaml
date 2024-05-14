@@ -10,6 +10,7 @@
     <Window.DataContext>
         <ctx:UserVM />
     </Window.DataContext>
+    
     <Grid>
         <StackPanel>
             <WrapPanel Margin="10">

@@ -163,7 +163,7 @@ namespace Supermarket.ViewModels
             {
                 userBLL.EditUser(SelectedUser);
                 int index = Users.IndexOf(SelectedUser);
-                Users[index] = SelectedUser; // Update the collection
+                Users[index] = SelectedUser; 
             }
         }
 
@@ -178,21 +178,18 @@ namespace Supermarket.ViewModels
 
         private bool ValidateUserInputs(string username, string password, string role)
         {
-            // Validate Username: only letters and digits
             if (string.IsNullOrWhiteSpace(username) || !Regex.IsMatch(username, @"^[a-zA-Z0-9]+$"))
             {
                 MessageBox.Show("Username must be non-empty and contain only letters and digits.");
                 return false;
             }
 
-            // Validate Password: only letters and digits
             if (string.IsNullOrWhiteSpace(password) || !Regex.IsMatch(password, @"^[a-zA-Z0-9]+$"))
             {
                 MessageBox.Show("Password must be non-empty and contain only letters and digits.");
                 return false;
             }
 
-            // Validate Role: must be either "Admin" or "Cashier"
             if (string.IsNullOrWhiteSpace(role) || !(role == "Admin" || role == "Cashier"))
             {
                 MessageBox.Show("Role must be either 'Admin' or 'Cashier'.");

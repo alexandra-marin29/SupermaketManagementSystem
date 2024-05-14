@@ -11,7 +11,7 @@
     </Window.Background>
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="216">
-            <Label FontSize="25" FontWeight="Bold">Supermarket Manager System</Label>
+            <Label FontSize="25" FontWeight="Bold">Supermarket Management System</Label>
             <Button Width="120" Margin="100,50" Click="OnClick_Login" Height="34">Log in</Button>
             <Button Width="120" Click="OnClick_Exit" Height="34" Content="Exit" />
         </StackPanel>
