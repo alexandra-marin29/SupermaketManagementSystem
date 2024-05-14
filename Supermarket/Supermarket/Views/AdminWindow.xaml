@@ -14,16 +14,16 @@
                     <StackPanel>
                         <WrapPanel Margin="10">
                             <Label Content="Username:"/>
-                            <TextBox Width="150" Text="{Binding NewUsername, Mode=TwoWay}"/>
+                            <TextBox Width="150" Text="{Binding UserVM.NewUsername, Mode=TwoWay}"/>
                             <Label Content="Password:"/>
-                            <TextBox Width="150" Text="{Binding NewPassword, Mode=TwoWay}"/>
+                            <TextBox Width="150" Text="{Binding UserVM.NewPassword, Mode=TwoWay}"/>
                             <Label Content="Role:"/>
-                            <ComboBox Width="100" ItemsSource="{Binding AvailableRoles}" SelectedItem="{Binding NewRole, Mode=TwoWay}"/>
-                            <Button Content="Add User" Width="100" Margin="5" Command="{Binding AddUserCommand}"/>
+                            <ComboBox Width="100" ItemsSource="{Binding UserVM.AvailableRoles}" SelectedItem="{Binding UserVM.NewRole, Mode=TwoWay}"/>
+                            <Button Content="Add User" Width="100" Margin="5" Command="{Binding UserVM.AddUserCommand}"/>
                         </WrapPanel>
-                        <Button Content="Edit User" Width="100" Margin="5" Command="{Binding EditUserCommand}"/>
-                        <Button Content="Delete User" Width="100" Margin="5" Command="{Binding DeleteUserCommand}"/>
-                        <DataGrid x:Name="UsersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="400" ItemsSource="{Binding Users}" SelectedItem="{Binding SelectedUser}">
+                        <Button Content="Edit User" Width="100" Margin="5" Command="{Binding UserVM.EditUserCommand}"/>
+                        <Button Content="Delete User" Width="100" Margin="5" Command="{Binding UserVM.DeleteUserCommand}"/>
+                        <DataGrid x:Name="UsersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="400" ItemsSource="{Binding UserVM.Users}" SelectedItem="{Binding UserVM.SelectedUser}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Username" Binding="{Binding Username}" />
                                 <DataGridTextColumn Header="Role" Binding="{Binding Role}" />
@@ -32,18 +32,27 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-
+            
             <!-- Categories Tab -->
             <TabItem Header="Categories">
                 <Grid>
                     <StackPanel>
-                        <Button Content="Add Category" Width="100" Margin="5"/>
-                        <Button Content="Edit Category" Width="100" Margin="5"/>
-                        <Button Content="Delete Category" Width="100" Margin="5"/>
-                        <DataGrid x:Name="CategoriesDataGrid" AutoGenerateColumns="True" Height="400"/>
+                        <WrapPanel Margin="10">
+                            <Label Content="Category Name:"/>
+                            <TextBox Width="200" Text="{Binding CategoryVM.NewCategoryName, Mode=TwoWay}"/>
+                            <Button Content="Add Category" Width="100" Margin="5" Command="{Binding CategoryVM.AddCategoryCommand}"/>
+                        </WrapPanel>
+                        <Button Content="Edit Category" Width="100" Margin="5" Command="{Binding CategoryVM.EditCategoryCommand}"/>
+                        <Button Content="Delete Category" Width="100" Margin="5" Command="{Binding CategoryVM.DeleteCategoryCommand}"/>
+                        <DataGrid x:Name="CategoriesDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="400" ItemsSource="{Binding CategoryVM.Categories}" SelectedItem="{Binding CategoryVM.SelectedCategory}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Category Name" Binding="{Binding CategoryName}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                 </Grid>
             </TabItem>
+
 
             <!-- Manufacturers Tab -->
             <TabItem Header="Manufacturers">

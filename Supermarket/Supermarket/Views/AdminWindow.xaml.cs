@@ -23,8 +23,7 @@ namespace Supermarket.Views
         public AdminWindow()
         {
             InitializeComponent();
-            DataContext = new UserVM();
-
+            DataContext = new AdminWindowVM();
         }
     }
 }
