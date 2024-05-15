@@ -60,17 +60,25 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\BusinessLogic\CategoryBLL.cs" />
+    <Compile Include="Models\BusinessLogic\ManufacturerBLL.cs" />
+    <Compile Include="Models\BusinessLogic\ProductBLL.cs" />
     <Compile Include="Models\BusinessLogic\UserBLL.cs" />
     <Compile Include="Models\DataAccessLayer\CategoryDAL.cs" />
     <Compile Include="Models\DataAccessLayer\DALHelper.cs" />
+    <Compile Include="Models\DataAccessLayer\ManufacturerDAL.cs" />
+    <Compile Include="Models\DataAccessLayer\ProductDAL.cs" />
     <Compile Include="Models\DataAccessLayer\UserDAL.cs" />
     <Compile Include="Models\EntityLayer\BasePropertyChanged.cs" />
     <Compile Include="Models\EntityLayer\Category.cs" />
+    <Compile Include="Models\EntityLayer\Manufacturer.cs" />
+    <Compile Include="Models\EntityLayer\Product.cs" />
     <Compile Include="Models\EntityLayer\User.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="ViewModels\AdminWindowVM.cs" />
     <Compile Include="ViewModels\CategoryVM.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
+    <Compile Include="ViewModels\ManufacturerVM.cs" />
+    <Compile Include="ViewModels\ProductVM.cs" />
     <Compile Include="ViewModels\UserVM.cs" />
     <Compile Include="Views\AdminWindow.xaml.cs">
       <DependentUpon>AdminWindow.xaml</DependentUpon>

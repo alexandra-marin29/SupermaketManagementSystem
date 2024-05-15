@@ -77,7 +77,7 @@ namespace Supermarket.ViewModels
         {
             if (SelectedCategory != null)
             {
-                categoryBLL.DeleteCategory(SelectedCategory.CategoryId);
+                categoryBLL.DeleteCategory(SelectedCategory.CategoryID);
                 Categories.Remove(SelectedCategory);
                 SelectedCategory = null;
                 NewCategoryName = string.Empty;

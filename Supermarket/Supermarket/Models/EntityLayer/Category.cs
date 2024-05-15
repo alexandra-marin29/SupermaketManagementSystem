@@ -6,13 +6,13 @@
         private string categoryName;
         private bool isActive;
 
-        public int CategoryId
+        public int CategoryID
         {
             get { return categoryId; }
             set
             {
                 categoryId = value;
-                NotifyPropertyChanged(nameof(CategoryId));
+                NotifyPropertyChanged(nameof(CategoryID));
             }
         }
 

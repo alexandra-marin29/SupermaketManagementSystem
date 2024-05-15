@@ -22,7 +22,7 @@ namespace Supermarket.Models.DataAccessLayer
                 {
                     Category category = new Category
                     {
-                        CategoryId = (int)reader["CategoryId"],
+                        CategoryID = (int)reader["CategoryId"],
                         CategoryName = reader["CategoryName"].ToString(),
                         IsActive = (bool)reader["IsActive"]
                     };
@@ -56,7 +56,7 @@ namespace Supermarket.Models.DataAccessLayer
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                cmd.Parameters.AddWithValue("@CategoryId", category.CategoryId);
+                cmd.Parameters.AddWithValue("@CategoryId", category.CategoryID);
                 cmd.Parameters.AddWithValue("@CategoryName", category.CategoryName);
 
                 con.Open();
