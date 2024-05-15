@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Supermarket.Views"
         xmlns:ctx="clr-namespace:Supermarket.ViewModels"
         mc:Ignorable="d"
-        Title="Cashier" Height="450" Width="800">
+        Title="Cashier" Height="600" Width="800">
     <Window.DataContext>
         <ctx:CashierVM />
     </Window.DataContext>
@@ -14,64 +14,66 @@
     <Grid>
         <StackPanel Orientation="Vertical" Margin="10">
             <!-- Product Search Section -->
-            <GroupBox Header="Search Products">
+            <GroupBox Header="Search Products" Margin="0,0,0,10">
                 <StackPanel>
-                    <WrapPanel>
-                        <Label Content="Product Name:" />
+                    <WrapPanel Margin="5">
+                        <Label Content="Product Name:" Width="120"/>
                         <ComboBox Width="150" IsEditable="True" Text="{Binding ProductName}" ItemsSource="{Binding ProductNames}" />
-                    </WrapPanel>
-                    <WrapPanel>
-                        <Label Content="Barcode:" />
+                        <Label Content="Barcode:" Width="120" Margin="10,0,0,0"/>
                         <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode}" ItemsSource="{Binding Barcodes}" />
                     </WrapPanel>
-                    <WrapPanel>
-                        <Label Content="Expiration Date:" />
-                        <DatePicker SelectedDate="{Binding ExpirationDate}" />
-                    </WrapPanel>
-                    <WrapPanel>
-                        <Label Content="Manufacturer:" />
+                    <WrapPanel Margin="5">
+                        <Label Content="Expiration Date:" Width="120"/>
+                        <DatePicker SelectedDate="{Binding ExpirationDate}" Width="150"/>
+                        <Label Content="Manufacturer:" Width="120" Margin="10,0,0,0"/>
                         <ComboBox Width="150" ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}" />
                     </WrapPanel>
-                    <WrapPanel>
-                        <Label Content="Category:" />
+                    <WrapPanel Margin="5">
+                        <Label Content="Category:" Width="120"/>
                         <ComboBox Width="150" ItemsSource="{Binding Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}" />
+                        <Button Content="Search" Width="100" Command="{Binding SearchProductsCommand}" Margin="10,0,0,0"/>
                     </WrapPanel>
-                    <Button Content="Search" Width="100" Command="{Binding SearchProductsCommand}" />
                 </StackPanel>
             </GroupBox>
 
             <!-- Products List Section -->
-            <GroupBox Header="Products">
-                <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" CanUserAddRows="False" Height="150">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" />
-                        <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" />
-                        <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerName}" />
-                        <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />
-                    </DataGrid.Columns>
-                </DataGrid>
+            <GroupBox Header="Products" Margin="0,0,0,10">
+                <ScrollViewer Height="120">
+                    <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" Width="*" />
+                            <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="*" />
+                            <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerName}" Width="*" />
+                            <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
             </GroupBox>
 
             <!-- Receipt Section -->
             <GroupBox Header="Receipt">
                 <StackPanel>
-                    <WrapPanel>
-                        <Label Content="Quantity:" />
-                        <TextBox Width="50" Text="{Binding Quantity}" />
-                        <Button Content="Add to Receipt" Width="100" Command="{Binding AddToReceiptCommand}" />
+                    <WrapPanel Margin="5">
+                        <Label Content="Quantity:" Width="120"/>
+                        <TextBox Width="100" Text="{Binding Quantity}" />
+                        <Button Content="Add to Receipt" Width="150" Command="{Binding AddToReceiptCommand}" Margin="10,0,0,0"/>
                     </WrapPanel>
-                    <DataGrid ItemsSource="{Binding ReceiptDetails}" AutoGenerateColumns="False" CanUserAddRows="False" Height="150">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" />
-                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
-                            <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <WrapPanel>
-                        <Label Content="Total Amount:" />
+                    <ScrollViewer Height="120">
+                        <DataGrid ItemsSource="{Binding ReceiptDetails}" AutoGenerateColumns="False" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="*" />
+                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*" />
+                                <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}" Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                    <WrapPanel Margin="5">
+                        <Label Content="Total Amount:" Width="120"/>
                         <TextBox Width="100" Text="{Binding TotalAmount}" IsReadOnly="True" />
                     </WrapPanel>
-                    <Button Content="Finalize Receipt" Width="150" Command="{Binding FinalizeReceiptCommand}" />
+                    <WrapPanel Margin="5" HorizontalAlignment="Right">
+                        <Button Content="Finalize Receipt" Width="150" Command="{Binding FinalizeReceiptCommand}" />
+                    </WrapPanel>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
