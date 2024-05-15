@@ -18,11 +18,11 @@
                 <StackPanel>
                     <WrapPanel>
                         <Label Content="Product Name:" />
-                        <TextBox Width="150" Text="{Binding ProductName}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding ProductName, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ProductNames}" />
                     </WrapPanel>
                     <WrapPanel>
                         <Label Content="Barcode:" />
-                        <TextBox Width="150" Text="{Binding Barcode}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Barcodes}" />
                     </WrapPanel>
                     <WrapPanel>
                         <Label Content="Expiration Date:" />

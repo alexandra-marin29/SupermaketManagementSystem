@@ -20,23 +20,26 @@ namespace Supermarket.ViewModels
 
         private ObservableCollection<Product> products;
         private ObservableCollection<ReceiptDetail> receiptDetails;
+        private ObservableCollection<string> productNames;
+        private ObservableCollection<string> barcodes;
         private ObservableCollection<Manufacturer> manufacturers;
         private ObservableCollection<Category> categories;
-
         private Product selectedProduct;
         private ReceiptDetail selectedReceiptDetail;
-        private Manufacturer selectedManufacturer;
-        private Category selectedCategory;
         private decimal quantity;
         private decimal totalAmount;
         private string productName;
         private string barcode;
         private DateTime? expirationDate;
+        private Manufacturer selectedManufacturer;
+        private Category selectedCategory;
 
         public CashierVM()
         {
             Products = new ObservableCollection<Product>();
             ReceiptDetails = new ObservableCollection<ReceiptDetail>();
+            ProductNames = new ObservableCollection<string>(productBLL.GetAllProducts().Select(p => p.ProductName).Distinct());
+            Barcodes = new ObservableCollection<string>(productBLL.GetAllProducts().Select(p => p.Barcode).Distinct());
             Manufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers());
             Categories = new ObservableCollection<Category>(categoryBLL.GetAllCategories());
 
@@ -62,6 +65,26 @@ namespace Supermarket.ViewModels
             {
                 receiptDetails = value;
                 NotifyPropertyChanged(nameof(ReceiptDetails));
+            }
+        }
+
+        public ObservableCollection<string> ProductNames
+        {
+            get { return productNames; }
+            set
+            {
+                productNames = value;
+                NotifyPropertyChanged(nameof(ProductNames));
+            }
+        }
+
+        public ObservableCollection<string> Barcodes
+        {
+            get { return barcodes; }
+            set
+            {
+                barcodes = value;
+                NotifyPropertyChanged(nameof(Barcodes));
             }
         }
 
@@ -102,26 +125,6 @@ namespace Supermarket.ViewModels
             {
                 selectedReceiptDetail = value;
                 NotifyPropertyChanged(nameof(SelectedReceiptDetail));
-            }
-        }
-
-        public Manufacturer SelectedManufacturer
-        {
-            get { return selectedManufacturer; }
-            set
-            {
-                selectedManufacturer = value;
-                NotifyPropertyChanged(nameof(SelectedManufacturer));
-            }
-        }
-
-        public Category SelectedCategory
-        {
-            get { return selectedCategory; }
-            set
-            {
-                selectedCategory = value;
-                NotifyPropertyChanged(nameof(SelectedCategory));
             }
         }
 
@@ -172,6 +175,26 @@ namespace Supermarket.ViewModels
             {
                 expirationDate = value;
                 NotifyPropertyChanged(nameof(ExpirationDate));
+            }
+        }
+
+        public Manufacturer SelectedManufacturer
+        {
+            get { return selectedManufacturer; }
+            set
+            {
+                selectedManufacturer = value;
+                NotifyPropertyChanged(nameof(SelectedManufacturer));
+            }
+        }
+
+        public Category SelectedCategory
+        {
+            get { return selectedCategory; }
+            set
+            {
+                selectedCategory = value;
+                NotifyPropertyChanged(nameof(SelectedCategory));
             }
         }
 

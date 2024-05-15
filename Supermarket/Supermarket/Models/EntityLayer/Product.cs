@@ -7,9 +7,9 @@ namespace Supermarket.Models.EntityLayer
         private int productID;
         private string productName;
         private string barcode;
-        private int categoryID;
-        private int manufacturerID;
-        private bool isActive ;
+        private int? categoryID;
+        private int? manufacturerID;
+        private bool isActive;
 
         public int ProductID
         {
@@ -41,7 +41,7 @@ namespace Supermarket.Models.EntityLayer
             }
         }
 
-        public int CategoryID
+        public int? CategoryID
         {
             get { return categoryID; }
             set
@@ -51,7 +51,7 @@ namespace Supermarket.Models.EntityLayer
             }
         }
 
-        public int ManufacturerID
+        public int? ManufacturerID
         {
             get { return manufacturerID; }
             set

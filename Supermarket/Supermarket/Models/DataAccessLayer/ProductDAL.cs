@@ -25,8 +25,8 @@ namespace Supermarket.Models.DataAccessLayer
                         ProductID = (int)reader["ProductID"],
                         ProductName = reader["ProductName"].ToString(),
                         Barcode = reader["Barcode"].ToString(),
-                        CategoryID = (int)reader["CategoryID"],
-                        ManufacturerID = (int)reader["ManufacturerID"],
+                        CategoryID = reader["CategoryID"] != DBNull.Value ? (int?)reader["CategoryID"] : null,
+                        ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int?)reader["ManufacturerID"] : null,
                         IsActive = (bool)reader["IsActive"]
                     };
                     products.Add(product);
@@ -36,7 +36,7 @@ namespace Supermarket.Models.DataAccessLayer
             return products;
         }
 
-        public Product GetProductById(int productId) // Add this method
+        public Product GetProductById(int productId)
         {
             Product product = null;
 
@@ -54,8 +54,8 @@ namespace Supermarket.Models.DataAccessLayer
                         ProductID = (int)reader["ProductID"],
                         ProductName = reader["ProductName"].ToString(),
                         Barcode = reader["Barcode"].ToString(),
-                        CategoryID = (int)reader["CategoryID"],
-                        ManufacturerID = (int)reader["ManufacturerID"],
+                        CategoryID = reader["CategoryID"] != DBNull.Value ? (int?)reader["CategoryID"] : null,
+                        ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int?)reader["ManufacturerID"] : null,
                         IsActive = (bool)reader["IsActive"]
                     };
                 }
@@ -74,15 +74,14 @@ namespace Supermarket.Models.DataAccessLayer
                 };
                 cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
                 cmd.Parameters.AddWithValue("@Barcode", product.Barcode);
-                cmd.Parameters.AddWithValue("@CategoryID", product.CategoryID);
-                cmd.Parameters.AddWithValue("@ManufacturerID", product.ManufacturerID);
+                cmd.Parameters.AddWithValue("@CategoryID", (object)product.CategoryID ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@ManufacturerID", (object)product.ManufacturerID ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@IsActive", 1); // Set IsActive to 1 by default
 
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
         }
-
 
         public void EditProduct(Product product)
         {
@@ -95,8 +94,8 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@ProductID", product.ProductID);
                 cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
                 cmd.Parameters.AddWithValue("@Barcode", product.Barcode);
-                cmd.Parameters.AddWithValue("@CategoryID", product.CategoryID);
-                cmd.Parameters.AddWithValue("@ManufacturerID", product.ManufacturerID);
+                cmd.Parameters.AddWithValue("@CategoryID", (object)product.CategoryID ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@ManufacturerID", (object)product.ManufacturerID ?? DBNull.Value);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
@@ -144,8 +143,8 @@ namespace Supermarket.Models.DataAccessLayer
                         ProductID = (int)reader["ProductID"],
                         ProductName = reader["ProductName"].ToString(),
                         Barcode = reader["Barcode"].ToString(),
-                        ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int)reader["ManufacturerID"] : 0,
-                        CategoryID = reader["CategoryID"] != DBNull.Value ? (int)reader["CategoryID"] : 0,
+                        ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int?)reader["ManufacturerID"] : null,
+                        CategoryID = reader["CategoryID"] != DBNull.Value ? (int?)reader["CategoryID"] : null,
                         IsActive = (bool)reader["IsActive"]
                     };
                     products.Add(product);
@@ -154,7 +153,5 @@ namespace Supermarket.Models.DataAccessLayer
 
             return products;
         }
-
-
     }
 }
