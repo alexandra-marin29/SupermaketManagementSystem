@@ -117,13 +117,46 @@
             <TabItem Header="Stocks">
                 <Grid>
                     <StackPanel>
-                        <Button Content="Add Stock" Width="100" Margin="5"/>
-                        <Button Content="Edit Stock" Width="100" Margin="5"/>
-                        <Button Content="Delete Stock" Width="100" Margin="5"/>
-                        <DataGrid x:Name="StocksDataGrid" AutoGenerateColumns="True" Height="400"/>
+                        <!-- First Row: Quantity, Unit of Measure, Supply Date, Expiration Date -->
+                        <WrapPanel Margin="10">
+                            <Label Content="Quantity:"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewQuantity, Mode=TwoWay}"/>
+                            <Label Content="Unit of Measure:"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewUnitOfMeasure, Mode=TwoWay}"/>
+                            <Label Content="Supply Date:"/>
+                            <DatePicker Width="150" SelectedDate="{Binding StockVM.NewSupplyDate, Mode=TwoWay}"/>
+                            <Label Content="Expiration Date:"/>
+                            <DatePicker Width="150" SelectedDate="{Binding StockVM.NewExpirationDate, Mode=TwoWay}"/>
+                        </WrapPanel>
+                        <!-- Second Row: Purchase Price, Sale Price, Product, Add Stock Button -->
+                        <WrapPanel Margin="10">
+                            <Label Content="Purchase Price:"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}"/>
+                            <Label Content="Sale Price:"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}" IsEnabled="False"/>
+                            <Label Content="Product:"/>
+                            <ComboBox Width="200" ItemsSource="{Binding StockVM.Products}" DisplayMemberPath="ProductName" SelectedItem="{Binding StockVM.NewProduct, Mode=TwoWay}"/>
+                            <Button Content="Add Stock" Width="100" Margin="10,0,0,0" Command="{Binding StockVM.AddStockCommand}"/>
+                        </WrapPanel>
+                        <!-- Edit and Delete Buttons -->
+                        <Button Content="Edit Stock" Width="100" Margin="5" Command="{Binding StockVM.EditStockCommand}"/>
+                        <Button Content="Delete Stock" Width="100" Margin="5" Command="{Binding StockVM.DeleteStockCommand}"/>
+                        <!-- DataGrid to display stocks -->
+                        <DataGrid x:Name="StocksDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="400" ItemsSource="{Binding StockVM.Stocks}" SelectedItem="{Binding StockVM.SelectedStock}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Product ID" Binding="{Binding ProductID}" />
+                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
+                                <DataGridTextColumn Header="Unit of Measure" Binding="{Binding UnitOfMeasure}" />
+                                <DataGridTextColumn Header="Supply Date" Binding="{Binding SupplyDate}" />
+                                <DataGridTextColumn Header="Expiration Date" Binding="{Binding ExpirationDate}" />
+                                <DataGridTextColumn Header="Purchase Price" Binding="{Binding PurchasePrice}" />
+                                <DataGridTextColumn Header="Sale Price" Binding="{Binding SalePrice}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                 </Grid>
             </TabItem>
+
 
             <!-- Reports Tab -->
             <TabItem Header="Reports">
