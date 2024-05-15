@@ -38,7 +38,6 @@ namespace Supermarket.Models.DataAccessLayer
             }
         }
 
-
         public List<Receipt> GetAllReceipts()
         {
             List<Receipt> receipts = new List<Receipt>();
@@ -120,8 +119,8 @@ namespace Supermarket.Models.DataAccessLayer
                         ProductID = (int)reader["ProductID"],
                         ProductName = reader["ProductName"].ToString(),
                         Barcode = reader["Barcode"].ToString(),
-                        CategoryID = (int)reader["CategoryID"],
-                        ManufacturerID = (int)reader["ManufacturerID"],
+                        CategoryID = reader["CategoryID"] != DBNull.Value ? (int)reader["CategoryID"] : (int?)null,
+                        ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int)reader["ManufacturerID"] : (int?)null,
                         IsActive = (bool)reader["IsActive"]
                     };
                     products.Add(product);
