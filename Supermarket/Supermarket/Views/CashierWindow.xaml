@@ -42,7 +42,7 @@
 
             <!-- Products List Section -->
             <GroupBox Header="Products">
-                <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Height="150">
+                <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" CanUserAddRows="False" Height="150">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" />
                         <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" />
@@ -60,7 +60,7 @@
                         <TextBox Width="50" Text="{Binding Quantity}" />
                         <Button Content="Add to Receipt" Width="100" Command="{Binding AddToReceiptCommand}" />
                     </WrapPanel>
-                    <DataGrid ItemsSource="{Binding ReceiptDetails}" AutoGenerateColumns="False" Height="150">
+                    <DataGrid ItemsSource="{Binding ReceiptDetails}" AutoGenerateColumns="False" CanUserAddRows="False" Height="150">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" />
                             <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
