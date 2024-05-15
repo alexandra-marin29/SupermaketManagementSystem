@@ -132,9 +132,9 @@
                         </WrapPanel>
                         <WrapPanel Margin="10">
                             <Label Content="Purchase Price:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}" IsReadOnly="{Binding StockVM.IsPurchasePriceReadOnly}"/>
                             <Label Content="Sale Price:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}" IsReadOnly="True"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}"/>
                             <Button Content="Add Stock" Width="100" Command="{Binding StockVM.AddStockCommand}"/>
                         </WrapPanel>
                         <Button Content="Edit Stock" Width="100" Margin="5" Command="{Binding StockVM.EditStockCommand}"/>
@@ -153,8 +153,6 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-
-
 
             <!-- Reports Tab -->
             <TabItem Header="Reports">

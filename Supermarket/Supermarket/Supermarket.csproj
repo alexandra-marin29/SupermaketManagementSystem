@@ -80,6 +80,7 @@
     <Compile Include="Models\EntityLayer\User.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="ViewModels\AdminWindowVM.cs" />
+    <Compile Include="ViewModels\CashierVM.cs" />
     <Compile Include="ViewModels\CategoryVM.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\ManufacturerVM.cs" />

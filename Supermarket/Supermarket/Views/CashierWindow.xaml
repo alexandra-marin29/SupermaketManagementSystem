@@ -7,6 +7,49 @@
         mc:Ignorable="d"
         Title="CashierWindow" Height="450" Width="800">
     <Grid>
-        
+        <StackPanel Margin="10">
+            <TextBlock Text="Search Product" FontWeight="Bold" Margin="5"/>
+            <WrapPanel>
+                <Label Content="Name:"/>
+                <TextBox Width="150" Text="{Binding ProductSearchName, Mode=TwoWay}"/>
+                <Label Content="Barcode:"/>
+                <TextBox Width="150" Text="{Binding ProductSearchBarcode, Mode=TwoWay}"/>
+                <Label Content="Expiration Date:"/>
+                <DatePicker Width="150" SelectedDate="{Binding ProductSearchExpirationDate, Mode=TwoWay}"/>
+                <Label Content="Manufacturer:"/>
+                <ComboBox Width="150" ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}"/>
+                <Label Content="Category:"/>
+                <ComboBox Width="150" ItemsSource="{Binding Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}"/>
+                <Button Content="Search" Command="{Binding SearchProductsCommand}" Margin="5"/>
+            </WrapPanel>
+
+            <TextBlock Text="Products" FontWeight="Bold" Margin="5"/>
+            <DataGrid ItemsSource="{Binding SearchedProducts}" AutoGenerateColumns="False" CanUserAddRows="False" Height="200" SelectedItem="{Binding SelectedProduct}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding ProductName}"/>
+                    <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}"/>
+                    <DataGridTextColumn Header="Expiration Date" Binding="{Binding ExpirationDate, StringFormat=\{0:MM/dd/yyyy\}}"/>
+                    <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerName}"/>
+                    <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding SalePrice}"/>
+                    <DataGridTextColumn Header="Stock" Binding="{Binding StockQuantity}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <TextBlock Text="Receipt" FontWeight="Bold" Margin="5"/>
+            <DataGrid ItemsSource="{Binding ReceiptItems}" AutoGenerateColumns="False" CanUserAddRows="False" Height="200">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Product" Binding="{Binding ProductName}"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+                    <DataGridTextColumn Header="Price" Binding="{Binding Price}"/>
+                    <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock Text="{Binding ReceiptTotal, StringFormat=Total: {0:C}}" FontWeight="Bold" Margin="5"/>
+            <WrapPanel>
+                <Button Content="Add to Receipt" Command="{Binding AddToReceiptCommand}" Margin="5"/>
+                <Button Content="Finalize Receipt" Command="{Binding FinalizeReceiptCommand}" Margin="5"/>
+            </WrapPanel>
+        </StackPanel>
     </Grid>
 </Window>

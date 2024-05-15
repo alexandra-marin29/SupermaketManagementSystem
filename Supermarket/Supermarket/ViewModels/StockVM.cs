@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using Supermarket.Models.BusinessLogic;
 using Supermarket.Models.EntityLayer;
@@ -24,6 +25,7 @@ namespace Supermarket.ViewModels
         private Product newProduct;
         private decimal commercialMarkup;
         private bool isAddingNewStock;
+        private bool isPurchasePriceReadOnly;
 
         public ObservableCollection<Stock> Stocks { get; set; }
         public ObservableCollection<Product> Products { get; set; }
@@ -79,10 +81,12 @@ namespace Supermarket.ViewModels
                     NewSalePrice = selectedStock.SalePrice;
                     NewProduct = Products.FirstOrDefault(p => p.ProductID == selectedStock.ProductID);
                     IsAddingNewStock = false; // Set to false when editing an existing stock
+                    IsPurchasePriceReadOnly = true; // Set to true to make the purchase price read-only
                 }
                 else
                 {
                     IsAddingNewStock = true; // Set to true when adding a new stock
+                    IsPurchasePriceReadOnly = false; // Set to false to make the purchase price editable
                 }
             }
         }
@@ -145,6 +149,11 @@ namespace Supermarket.ViewModels
             set
             {
                 newSalePrice = value;
+                if (newSalePrice < NewPurchasePrice)
+                {
+                    MessageBox.Show("Sale price cannot be less than purchase price.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    NewSalePrice = NewPurchasePrice * (1 + commercialMarkup);
+                }
                 NotifyPropertyChanged(nameof(NewSalePrice));
             }
         }
@@ -166,6 +175,16 @@ namespace Supermarket.ViewModels
             {
                 isAddingNewStock = value;
                 NotifyPropertyChanged(nameof(IsAddingNewStock));
+            }
+        }
+
+        public bool IsPurchasePriceReadOnly
+        {
+            get { return isPurchasePriceReadOnly; }
+            set
+            {
+                isPurchasePriceReadOnly = value;
+                NotifyPropertyChanged(nameof(IsPurchasePriceReadOnly));
             }
         }
 
@@ -209,6 +228,10 @@ namespace Supermarket.ViewModels
                 Stocks[index] = SelectedStock;
                 ClearFields();
             }
+            else if (NewSalePrice < NewPurchasePrice)
+            {
+                MessageBox.Show("Sale price cannot be less than purchase price.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void DeleteStock(object parameter)
@@ -231,9 +254,7 @@ namespace Supermarket.ViewModels
             NewSalePrice = 0;
             NewProduct = null;
             IsAddingNewStock = true; // Reset to true for adding new stock
+            IsPurchasePriceReadOnly = false; // Reset to false to make the purchase price editable
         }
     }
 }
-
-
-
