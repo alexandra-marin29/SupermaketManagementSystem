@@ -27,5 +27,9 @@ namespace Supermarket.Models.BusinessLogic
         {
             stockDAL.DeleteStock(stockID);
         }
+        public List<Stock> GetStocksByProductId(int productId) 
+        {
+            return stockDAL.GetStocksByProductId(productId);
+        }
     }
 }

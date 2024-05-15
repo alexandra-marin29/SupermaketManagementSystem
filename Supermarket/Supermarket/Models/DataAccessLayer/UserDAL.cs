@@ -111,7 +111,7 @@ namespace Supermarket.Models.DataAccessLayer
             }
         }
 
-        public Role GetUserByLogin(string username, string password)
+        public User GetUserByLogin(string username, string password)
         {
             using (SqlConnection con = DALHelper.Connection)
             {
@@ -126,22 +126,20 @@ namespace Supermarket.Models.DataAccessLayer
 
                     con.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
-                    string queryResult = null;
+                    User user = null;
                     if (reader.Read())
                     {
-                        queryResult = reader["Role"].ToString();
+                        user = new User
+                        {
+                            UserId = (int)reader["UserID"],  // Ensure this matches the column name in the database
+                            Username = reader["Username"].ToString(),
+                            Role = reader["Role"].ToString(),
+                            IsActive = (bool)reader["IsActive"]
+                        };
                     }
                     reader.Close();
 
-                    if (queryResult == "Admin")
-                    {
-                        return Role.Admin;
-                    }
-                    if (queryResult == "Cashier")
-                    {
-                        return Role.Cashier;
-                    }
-                    return Role.None;
+                    return user;
                 }
                 catch (Exception ex)
                 {

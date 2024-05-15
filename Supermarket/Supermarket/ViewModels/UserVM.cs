@@ -124,25 +124,35 @@ namespace Supermarket.ViewModels
         #region Commands
         private void Login(object parameter)
         {
-            Role role = userBLL.GetUserByLogin(Username, Password);
+            User user = userBLL.GetUserByLogin(Username, Password);
 
-            if (role == Role.Admin)
+            if (user != null)
             {
-                AdminWindow adminWindow = new AdminWindow();
-                adminWindow.Show();
-                CloseAllWindows();
-            }
-            else if (role == Role.Cashier)
-            {
-                CashierWindow cashierWindow = new CashierWindow();
-                cashierWindow.Show();
-                CloseAllWindows();
+                SessionManager.CurrentUser = user;
+
+                if (user.Role == "Admin")
+                {
+                    AdminWindow adminWindow = new AdminWindow();
+                    adminWindow.Show();
+                    CloseAllWindows();
+                }
+                else if (user.Role == "Cashier")
+                {
+                    CashierWindow cashierWindow = new CashierWindow();
+                    cashierWindow.Show();
+                    CloseAllWindows();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid username or password.");
+                }
             }
             else
             {
                 MessageBox.Show("Invalid username or password.");
             }
         }
+
 
         private void AddUser(object parameter)
         {
@@ -163,7 +173,7 @@ namespace Supermarket.ViewModels
             {
                 userBLL.EditUser(SelectedUser);
                 int index = Users.IndexOf(SelectedUser);
-                Users[index] = SelectedUser; 
+                Users[index] = SelectedUser;
             }
         }
 

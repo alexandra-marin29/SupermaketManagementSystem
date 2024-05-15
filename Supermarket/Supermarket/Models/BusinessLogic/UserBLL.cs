@@ -4,7 +4,7 @@ using Supermarket.Models.EntityLayer;
 
 namespace Supermarket.Models.BusinessLogic
 {
-    class UserBLL
+    public class UserBLL
     {
         UserDAL userDAL = new UserDAL();
 
@@ -17,7 +17,6 @@ namespace Supermarket.Models.BusinessLogic
         {
             return userDAL.GetAllCashiers();
         }
-
 
         public void AddUser(User user)
         {
@@ -34,11 +33,11 @@ namespace Supermarket.Models.BusinessLogic
             userDAL.DeleteUser(userId);
         }
 
-        public Role GetUserByLogin(string username, string password)
+        public User GetUserByLogin(string username, string password)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                return Role.None;
+                return null;
             }
             return userDAL.GetUserByLogin(username, password);
         }

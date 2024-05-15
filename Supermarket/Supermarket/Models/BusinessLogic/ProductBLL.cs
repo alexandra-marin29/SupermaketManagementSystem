@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Supermarket.Models.DataAccessLayer;
 using Supermarket.Models.EntityLayer;
 
@@ -31,6 +32,10 @@ namespace Supermarket.Models.BusinessLogic
         public void DeleteProduct(int productID)
         {
             productDAL.DeleteProduct(productID);
+        }
+        public List<Product> SearchProducts(string productName, string barcode, DateTime? expirationDate, int? manufacturerId, int? categoryId)
+        {
+            return productDAL.SearchProducts(productName, barcode, expirationDate, manufacturerId, categoryId);
         }
     }
 }

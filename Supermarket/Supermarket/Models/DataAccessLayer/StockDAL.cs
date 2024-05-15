@@ -39,6 +39,38 @@ namespace Supermarket.Models.DataAccessLayer
             return stocks;
         }
 
+        public List<Stock> GetStocksByProductId(int productId) // Add this method
+        {
+            List<Stock> stocks = new List<Stock>();
+
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SELECT * FROM ProductStocks WHERE ProductID = @ProductID AND IsActive = 1", con);
+                cmd.Parameters.AddWithValue("@ProductID", productId);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Stock stock = new Stock
+                    {
+                        StockID = (int)reader["StockID"],
+                        ProductID = (int)reader["ProductID"],
+                        Quantity = (decimal)reader["Quantity"],
+                        UnitOfMeasure = reader["UnitOfMeasure"].ToString(),
+                        SupplyDate = (DateTime)reader["SupplyDate"],
+                        ExpirationDate = (DateTime)reader["ExpirationDate"],
+                        PurchasePrice = (decimal)reader["PurchasePrice"],
+                        SalePrice = (decimal)reader["SalePrice"],
+                        IsActive = (bool)reader["IsActive"]
+                    };
+                    stocks.Add(stock);
+                }
+            }
+
+            return stocks;
+        }
+
         public void AddStock(Stock stock)
         {
             using (SqlConnection con = DALHelper.Connection)

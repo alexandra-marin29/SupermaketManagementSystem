@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Supermarket.Models.EntityLayer;
@@ -75,12 +76,13 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@Barcode", product.Barcode);
                 cmd.Parameters.AddWithValue("@CategoryID", product.CategoryID);
                 cmd.Parameters.AddWithValue("@ManufacturerID", product.ManufacturerID);
-                cmd.Parameters.AddWithValue("@IsActive", product.IsActive);
+                cmd.Parameters.AddWithValue("@IsActive", 1); // Set IsActive to 1 by default
 
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
         }
+
 
         public void EditProduct(Product product)
         {
@@ -115,5 +117,44 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.ExecuteNonQuery();
             }
         }
+
+        public List<Product> SearchProducts(string productName, string barcode, DateTime? expirationDate, int? manufacturerId, int? categoryId)
+        {
+            List<Product> products = new List<Product>();
+
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SearchProducts", con)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@ProductName", (object)productName ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Barcode", (object)barcode ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@ExpirationDate", (object)expirationDate ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@ManufacturerID", (object)manufacturerId ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@CategoryID", (object)categoryId ?? DBNull.Value);
+
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Product product = new Product
+                    {
+                        ProductID = (int)reader["ProductID"],
+                        ProductName = reader["ProductName"].ToString(),
+                        Barcode = reader["Barcode"].ToString(),
+                        ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int)reader["ManufacturerID"] : 0,
+                        CategoryID = reader["CategoryID"] != DBNull.Value ? (int)reader["CategoryID"] : 0,
+                        IsActive = (bool)reader["IsActive"]
+                    };
+                    products.Add(product);
+                }
+            }
+
+            return products;
+        }
+
+
     }
 }

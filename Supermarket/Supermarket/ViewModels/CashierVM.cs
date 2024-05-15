@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Supermarket.Models;
 using Supermarket.Models.BusinessLogic;
 using Supermarket.Models.EntityLayer;
 using Supermarket.ViewModels.Commands;
@@ -12,50 +13,95 @@ namespace Supermarket.ViewModels
     public class CashierVM : BasePropertyChanged
     {
         private ProductBLL productBLL = new ProductBLL();
+        private ReceiptBLL receiptBLL = new ReceiptBLL();
         private StockBLL stockBLL = new StockBLL();
         private ManufacturerBLL manufacturerBLL = new ManufacturerBLL();
         private CategoryBLL categoryBLL = new CategoryBLL();
 
-        private string productSearchName;
-        private string productSearchBarcode;
-        private DateTime? productSearchExpirationDate;
+        private ObservableCollection<Product> products;
+        private ObservableCollection<ReceiptDetail> receiptDetails;
+        private ObservableCollection<Manufacturer> manufacturers;
+        private ObservableCollection<Category> categories;
+
+        private Product selectedProduct;
+        private ReceiptDetail selectedReceiptDetail;
         private Manufacturer selectedManufacturer;
         private Category selectedCategory;
-        private Product selectedProduct;
+        private decimal quantity;
+        private decimal totalAmount;
+        private string productName;
+        private string barcode;
+        private DateTime? expirationDate;
 
-        private ObservableCollection<Product> searchedProducts;
-        private ObservableCollection<ReceiptItem> receiptItems;
-
-        public ObservableCollection<Manufacturer> Manufacturers { get; set; }
-        public ObservableCollection<Category> Categories { get; set; }
-
-        public string ProductSearchName
+        public CashierVM()
         {
-            get { return productSearchName; }
+            Products = new ObservableCollection<Product>();
+            ReceiptDetails = new ObservableCollection<ReceiptDetail>();
+            Manufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers());
+            Categories = new ObservableCollection<Category>(categoryBLL.GetAllCategories());
+
+            SearchProductsCommand = new RelayCommand<object>(SearchProducts);
+            AddToReceiptCommand = new RelayCommand<object>(AddToReceipt);
+            FinalizeReceiptCommand = new RelayCommand<object>(FinalizeReceipt);
+        }
+
+        public ObservableCollection<Product> Products
+        {
+            get { return products; }
             set
             {
-                productSearchName = value;
-                NotifyPropertyChanged(nameof(ProductSearchName));
+                products = value;
+                NotifyPropertyChanged(nameof(Products));
             }
         }
 
-        public string ProductSearchBarcode
+        public ObservableCollection<ReceiptDetail> ReceiptDetails
         {
-            get { return productSearchBarcode; }
+            get { return receiptDetails; }
             set
             {
-                productSearchBarcode = value;
-                NotifyPropertyChanged(nameof(ProductSearchBarcode));
+                receiptDetails = value;
+                NotifyPropertyChanged(nameof(ReceiptDetails));
             }
         }
 
-        public DateTime? ProductSearchExpirationDate
+        public ObservableCollection<Manufacturer> Manufacturers
         {
-            get { return productSearchExpirationDate; }
+            get { return manufacturers; }
             set
             {
-                productSearchExpirationDate = value;
-                NotifyPropertyChanged(nameof(ProductSearchExpirationDate));
+                manufacturers = value;
+                NotifyPropertyChanged(nameof(Manufacturers));
+            }
+        }
+
+        public ObservableCollection<Category> Categories
+        {
+            get { return categories; }
+            set
+            {
+                categories = value;
+                NotifyPropertyChanged(nameof(Categories));
+            }
+        }
+
+        public Product SelectedProduct
+        {
+            get { return selectedProduct; }
+            set
+            {
+                selectedProduct = value;
+                NotifyPropertyChanged(nameof(SelectedProduct));
+            }
+        }
+
+        public ReceiptDetail SelectedReceiptDetail
+        {
+            get { return selectedReceiptDetail; }
+            set
+            {
+                selectedReceiptDetail = value;
+                NotifyPropertyChanged(nameof(SelectedReceiptDetail));
             }
         }
 
@@ -79,138 +125,23 @@ namespace Supermarket.ViewModels
             }
         }
 
-        public Product SelectedProduct
+        public decimal Quantity
         {
-            get { return selectedProduct; }
+            get { return quantity; }
             set
             {
-                selectedProduct = value;
-                NotifyPropertyChanged(nameof(SelectedProduct));
+                quantity = value;
+                NotifyPropertyChanged(nameof(Quantity));
             }
         }
 
-        public ObservableCollection<Product> SearchedProducts
+        public decimal TotalAmount
         {
-            get { return searchedProducts; }
+            get { return totalAmount; }
             set
             {
-                searchedProducts = value;
-                NotifyPropertyChanged(nameof(SearchedProducts));
-            }
-        }
-
-        public ObservableCollection<ReceiptItem> ReceiptItems
-        {
-            get { return receiptItems; }
-            set
-            {
-                receiptItems = value;
-                NotifyPropertyChanged(nameof(ReceiptItems));
-                NotifyPropertyChanged(nameof(ReceiptTotal));
-            }
-        }
-
-        public decimal ReceiptTotal
-        {
-            get { return ReceiptItems?.Sum(item => item.Subtotal) ?? 0; }
-        }
-
-        public ICommand SearchProductsCommand { get; }
-        public ICommand AddToReceiptCommand { get; }
-        public ICommand FinalizeReceiptCommand { get; }
-
-        public CashierVM()
-        {
-            Manufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers());
-            Categories = new ObservableCollection<Category>(categoryBLL.GetAllCategories());
-            SearchedProducts = new ObservableCollection<Product>();
-            ReceiptItems = new ObservableCollection<ReceiptItem>();
-
-            SearchProductsCommand = new RelayCommand<object>(SearchProducts);
-            AddToReceiptCommand = new RelayCommand<object>(AddToReceipt);
-            FinalizeReceiptCommand = new RelayCommand<object>(FinalizeReceipt);
-        }
-
-        private void SearchProducts(object parameter)
-        {
-            SearchedProducts = new ObservableCollection<Product>(productBLL.SearchProducts(ProductSearchName, ProductSearchBarcode, ProductSearchExpirationDate, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID));
-        }
-
-        private void AddToReceipt(object parameter)
-        {
-            if (SelectedProduct != null)
-            {
-                var existingItem = ReceiptItems.FirstOrDefault(item => item.ProductID == SelectedProduct.ProductID);
-                if (existingItem != null)
-                {
-                    existingItem.Quantity++;
-                    existingItem.Subtotal = existingItem.Quantity * existingItem.Price;
-                }
-                else
-                {
-                    var receiptItem = new ReceiptItem
-                    {
-                        ProductID = SelectedProduct.ProductID,
-                        ProductName = SelectedProduct.ProductName,
-                        Quantity = 1,
-                        Price = SelectedProduct.SalePrice,
-                        Subtotal = SelectedProduct.SalePrice
-                    };
-                    ReceiptItems.Add(receiptItem);
-                }
-                NotifyPropertyChanged(nameof(ReceiptTotal));
-            }
-        }
-
-        private void FinalizeReceipt(object parameter)
-        {
-            // Update stock quantities
-            foreach (var item in ReceiptItems)
-            {
-                var stock = stockBLL.GetStocksByProductId(item.ProductID)
-                                    .OrderBy(s => s.SupplyDate)
-                                    .FirstOrDefault(s => s.Quantity >= item.Quantity);
-                if (stock != null)
-                {
-                    stock.Quantity -= item.Quantity;
-                    stockBLL.EditStock(stock);
-                    if (stock.Quantity == 0)
-                    {
-                        stock.IsActive = false;
-                        stockBLL.EditStock(stock);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show($"Insufficient stock for {item.ProductName}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-            }
-
-            // Save receipt to database (implementation not shown here)
-
-            // Clear receipt
-            ReceiptItems.Clear();
-            NotifyPropertyChanged(nameof(ReceiptTotal));
-            MessageBox.Show("Receipt finalized successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-    }
-
-    public class ReceiptItem : BasePropertyChanged
-    {
-        private int productID;
-        private string productName;
-        private int quantity;
-        private decimal price;
-        private decimal subtotal;
-
-        public int ProductID
-        {
-            get { return productID; }
-            set
-            {
-                productID = value;
-                NotifyPropertyChanged(nameof(ProductID));
+                totalAmount = value;
+                NotifyPropertyChanged(nameof(TotalAmount));
             }
         }
 
@@ -224,35 +155,101 @@ namespace Supermarket.ViewModels
             }
         }
 
-        public int Quantity
+        public string Barcode
         {
-            get { return quantity; }
+            get { return barcode; }
             set
             {
-                quantity = value;
-                NotifyPropertyChanged(nameof(Quantity));
+                barcode = value;
+                NotifyPropertyChanged(nameof(Barcode));
             }
         }
 
-        public decimal Price
+        public DateTime? ExpirationDate
         {
-            get { return price; }
+            get { return expirationDate; }
             set
             {
-                price = value;
-                NotifyPropertyChanged(nameof(Price));
+                expirationDate = value;
+                NotifyPropertyChanged(nameof(ExpirationDate));
             }
         }
 
-        public decimal Subtotal
+        public ICommand SearchProductsCommand { get; }
+        public ICommand AddToReceiptCommand { get; }
+        public ICommand FinalizeReceiptCommand { get; }
+
+        private void SearchProducts(object parameter)
         {
-            get { return subtotal; }
-            set
+            Products.Clear();
+            var productsList = productBLL.SearchProducts(ProductName, Barcode, ExpirationDate, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID);
+            foreach (var product in productsList)
             {
-                subtotal = value;
-                NotifyPropertyChanged(nameof(Subtotal));
+                Products.Add(product);
             }
+        }
+
+        private void AddToReceipt(object parameter)
+        {
+            if (SelectedProduct != null && Quantity > 0)
+            {
+                var stock = stockBLL.GetStocksByProductId(SelectedProduct.ProductID)
+                    .FirstOrDefault(s => s.ExpirationDate > DateTime.Now && s.Quantity >= Quantity);
+
+                if (stock != null)
+                {
+                    decimal salePrice = stock.SalePrice;
+                    decimal subtotal = salePrice * Quantity;
+
+                    var receiptDetail = new ReceiptDetail
+                    {
+                        ProductID = SelectedProduct.ProductID,
+                        ProductName = SelectedProduct.ProductName,
+                        Quantity = Quantity,
+                        Subtotal = subtotal
+                    };
+
+                    ReceiptDetails.Add(receiptDetail);
+                    TotalAmount += subtotal;
+
+                    stock.Quantity -= Quantity;
+                    if (stock.Quantity == 0)
+                    {
+                        stock.IsActive = false;
+                    }
+                    stockBLL.EditStock(stock);
+
+                    ClearFields();
+                }
+                else
+                {
+                    MessageBox.Show("Insufficient stock or expired product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void FinalizeReceipt(object parameter)
+        {
+            if (ReceiptDetails.Count > 0)
+            {
+                var receipt = new Receipt
+                {
+                    CashierID = SessionManager.CurrentUser.UserId,
+                    ReceiptDate = DateTime.Now,
+                    AmountCollected = TotalAmount
+                };
+
+                receiptBLL.AddReceipt(receipt, ReceiptDetails.ToList());
+
+                ReceiptDetails.Clear();
+                TotalAmount = 0;
+            }
+        }
+
+        private void ClearFields()
+        {
+            SelectedProduct = null;
+            Quantity = 0;
         }
     }
 }
-

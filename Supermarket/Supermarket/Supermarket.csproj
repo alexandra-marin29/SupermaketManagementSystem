@@ -62,6 +62,7 @@
     <Compile Include="Models\BusinessLogic\CategoryBLL.cs" />
     <Compile Include="Models\BusinessLogic\ManufacturerBLL.cs" />
     <Compile Include="Models\BusinessLogic\ProductBLL.cs" />
+    <Compile Include="Models\BusinessLogic\ReceiptBLL.cs" />
     <Compile Include="Models\BusinessLogic\ReportsBLL.cs" />
     <Compile Include="Models\BusinessLogic\StockBLL.cs" />
     <Compile Include="Models\BusinessLogic\UserBLL.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Models\DataAccessLayer\DALHelper.cs" />
     <Compile Include="Models\DataAccessLayer\ManufacturerDAL.cs" />
     <Compile Include="Models\DataAccessLayer\ProductDAL.cs" />
+    <Compile Include="Models\DataAccessLayer\ReceiptDAL.cs" />
     <Compile Include="Models\DataAccessLayer\ReportsDAL.cs" />
     <Compile Include="Models\DataAccessLayer\StockDAL.cs" />
     <Compile Include="Models\DataAccessLayer\UserDAL.cs" />
@@ -76,9 +78,12 @@
     <Compile Include="Models\EntityLayer\Category.cs" />
     <Compile Include="Models\EntityLayer\Manufacturer.cs" />
     <Compile Include="Models\EntityLayer\Product.cs" />
+    <Compile Include="Models\EntityLayer\Receipt.cs" />
+    <Compile Include="Models\EntityLayer\ReceiptDetail.cs" />
     <Compile Include="Models\EntityLayer\Stock.cs" />
     <Compile Include="Models\EntityLayer\User.cs" />
     <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\SessionManager.cs" />
     <Compile Include="ViewModels\AdminWindowVM.cs" />
     <Compile Include="ViewModels\CashierVM.cs" />
     <Compile Include="ViewModels\CategoryVM.cs" />

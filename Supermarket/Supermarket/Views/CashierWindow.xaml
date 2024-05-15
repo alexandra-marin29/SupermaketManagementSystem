@@ -1,55 +1,80 @@
 ﻿<Window x:Class="Supermarket.Views.CashierWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Supermarket.Views"
+        xmlns:ctx="clr-namespace:Supermarket.ViewModels"
         mc:Ignorable="d"
-        Title="CashierWindow" Height="450" Width="800">
+        Title="Cashier" Height="450" Width="800">
+    <Window.DataContext>
+        <ctx:CashierVM />
+    </Window.DataContext>
+
     <Grid>
-        <StackPanel Margin="10">
-            <TextBlock Text="Search Product" FontWeight="Bold" Margin="5"/>
-            <WrapPanel>
-                <Label Content="Name:"/>
-                <TextBox Width="150" Text="{Binding ProductSearchName, Mode=TwoWay}"/>
-                <Label Content="Barcode:"/>
-                <TextBox Width="150" Text="{Binding ProductSearchBarcode, Mode=TwoWay}"/>
-                <Label Content="Expiration Date:"/>
-                <DatePicker Width="150" SelectedDate="{Binding ProductSearchExpirationDate, Mode=TwoWay}"/>
-                <Label Content="Manufacturer:"/>
-                <ComboBox Width="150" ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}"/>
-                <Label Content="Category:"/>
-                <ComboBox Width="150" ItemsSource="{Binding Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}"/>
-                <Button Content="Search" Command="{Binding SearchProductsCommand}" Margin="5"/>
-            </WrapPanel>
+        <StackPanel Orientation="Vertical" Margin="10">
+            <!-- Product Search Section -->
+            <GroupBox Header="Search Products">
+                <StackPanel>
+                    <WrapPanel>
+                        <Label Content="Product Name:" />
+                        <TextBox Width="150" Text="{Binding ProductName}" />
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label Content="Barcode:" />
+                        <TextBox Width="150" Text="{Binding Barcode}" />
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label Content="Expiration Date:" />
+                        <DatePicker SelectedDate="{Binding ExpirationDate}" />
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label Content="Manufacturer:" />
+                        <ComboBox Width="150" ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}" />
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label Content="Category:" />
+                        <ComboBox Width="150" ItemsSource="{Binding Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}" />
+                    </WrapPanel>
+                    <Button Content="Search" Width="100" Command="{Binding SearchProductsCommand}" />
+                </StackPanel>
+            </GroupBox>
 
-            <TextBlock Text="Products" FontWeight="Bold" Margin="5"/>
-            <DataGrid ItemsSource="{Binding SearchedProducts}" AutoGenerateColumns="False" CanUserAddRows="False" Height="200" SelectedItem="{Binding SelectedProduct}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding ProductName}"/>
-                    <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}"/>
-                    <DataGridTextColumn Header="Expiration Date" Binding="{Binding ExpirationDate, StringFormat=\{0:MM/dd/yyyy\}}"/>
-                    <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerName}"/>
-                    <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}"/>
-                    <DataGridTextColumn Header="Price" Binding="{Binding SalePrice}"/>
-                    <DataGridTextColumn Header="Stock" Binding="{Binding StockQuantity}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+            <!-- Products List Section -->
+            <GroupBox Header="Products">
+                <DataGrid ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct}" AutoGenerateColumns="False" Height="150">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" />
+                        <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" />
+                        <DataGridTextColumn Header="Expiration Date" Binding="{Binding ExpirationDate, StringFormat=\{0:MM/dd/yyyy\}}" />
+                        <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerName}" />
+                        <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
 
-            <TextBlock Text="Receipt" FontWeight="Bold" Margin="5"/>
-            <DataGrid ItemsSource="{Binding ReceiptItems}" AutoGenerateColumns="False" CanUserAddRows="False" Height="200">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Product" Binding="{Binding ProductName}"/>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
-                    <DataGridTextColumn Header="Price" Binding="{Binding Price}"/>
-                    <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-            <TextBlock Text="{Binding ReceiptTotal, StringFormat=Total: {0:C}}" FontWeight="Bold" Margin="5"/>
-            <WrapPanel>
-                <Button Content="Add to Receipt" Command="{Binding AddToReceiptCommand}" Margin="5"/>
-                <Button Content="Finalize Receipt" Command="{Binding FinalizeReceiptCommand}" Margin="5"/>
-            </WrapPanel>
+            <!-- Receipt Section -->
+            <GroupBox Header="Receipt">
+                <StackPanel>
+                    <WrapPanel>
+                        <Label Content="Quantity:" />
+                        <TextBox Width="50" Text="{Binding Quantity}" />
+                        <Button Content="Add to Receipt" Width="100" Command="{Binding AddToReceiptCommand}" />
+                    </WrapPanel>
+                    <DataGrid ItemsSource="{Binding ReceiptDetails}" AutoGenerateColumns="False" Height="150">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" />
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" />
+                            <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <WrapPanel>
+                        <Label Content="Total Amount:" />
+                        <TextBox Width="100" Text="{Binding TotalAmount}" IsReadOnly="True" />
+                    </WrapPanel>
+                    <Button Content="Finalize Receipt" Width="150" Command="{Binding FinalizeReceiptCommand}" />
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
     </Grid>
 </Window>

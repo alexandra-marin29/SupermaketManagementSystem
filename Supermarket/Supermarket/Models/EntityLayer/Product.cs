@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Supermarket.Models.EntityLayer
 {
@@ -13,7 +9,7 @@ namespace Supermarket.Models.EntityLayer
         private string barcode;
         private int categoryID;
         private int manufacturerID;
-        private bool isActive;
+        private bool isActive ;
 
         public int ProductID
         {
