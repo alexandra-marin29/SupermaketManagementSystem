@@ -137,7 +137,7 @@
                             <Label Content="Purchase Price:"/>
                             <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsAddingNewStock}"/>
                             <Label Content="Sale Price:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}" IsEnabled="False"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}" IsReadOnly="True"/>
                             <Button Content="Add Stock" Width="100" Margin="10,0,0,0" Command="{Binding StockVM.AddStockCommand}"/>
                         </WrapPanel>
                         <!-- Edit and Delete Buttons -->

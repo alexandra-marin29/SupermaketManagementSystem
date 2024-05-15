@@ -41,9 +41,19 @@ namespace Supermarket.ViewModels
             EditStockCommand = new RelayCommand<object>(EditStock);
             DeleteStockCommand = new RelayCommand<object>(DeleteStock);
 
-            // Retrieve commercial markup from configuration
-            commercialMarkup = decimal.Parse(ConfigurationManager.AppSettings["CommercialMarkup"]);
+            // Retrieve commercial markup from configuration and ensure it's interpreted as a percentage
+            string markupString = ConfigurationManager.AppSettings["CommercialMarkup"];
+            if (decimal.TryParse(markupString, out decimal markup))
+            {
+                commercialMarkup = markup / 100; // Convert to percentage
+            }
+            else
+            {
+                commercialMarkup = 0.20m; // Default to 20% if parsing fails
+            }
 
+            NewSupplyDate = new DateTime(2024, 1, 1); // Default date starting in 2024
+            NewExpirationDate = new DateTime(2024, 1, 1); // Default date starting in 2024
             IsAddingNewStock = true; // Initially, set to true when adding a new stock
         }
 
@@ -207,8 +217,8 @@ namespace Supermarket.ViewModels
         {
             NewQuantity = 0;
             NewUnitOfMeasure = string.Empty;
-            NewSupplyDate = DateTime.Now;
-            NewExpirationDate = DateTime.Now;
+            NewSupplyDate = new DateTime(2024, 1, 1);
+            NewExpirationDate = new DateTime(2024, 1, 1);
             NewPurchasePrice = 0;
             NewSalePrice = 0;
             NewProduct = null;
