@@ -116,6 +116,7 @@ namespace Supermarket.ViewModels
             ShowLargestReceiptCommand = new RelayCommand<object>(ShowLargestReceipt);
 
             InitializeReportTypes();
+
         }
 
         private void InitializeReportTypes()
@@ -181,17 +182,13 @@ namespace Supermarket.ViewModels
         private FrameworkElement CreateReceiptsView()
         {
             var stackPanel = new StackPanel();
-            stackPanel.Children.Add(new TextBlock { Text = "Select Category:", Margin = new Thickness(5) });
-            var categoryComboBox = new ComboBox { Width = 200, ItemsSource = Categories, DisplayMemberPath = "CategoryName", SelectedItem = SelectedCategory, Margin = new Thickness(5) };
-            categoryComboBox.SetBinding(ComboBox.SelectedItemProperty, new System.Windows.Data.Binding("SelectedCategory") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
-            stackPanel.Children.Add(categoryComboBox);
-            var showButton = new Button { Content = "Show Category Values", Width = 200, Margin = new Thickness(5), Command = ShowCategoryValuesCommand };
-            stackPanel.Children.Add(showButton);
-            var categoryValuesDataGrid = new DataGrid { AutoGenerateColumns = true, Height = 150, ItemsSource = CategoryValues };
-            categoryValuesDataGrid.SetBinding(DataGrid.ItemsSourceProperty, new System.Windows.Data.Binding("CategoryValues") { Source = this });
-            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = categoryValuesDataGrid });
+            stackPanel.Children.Add(new TextBlock { Text = "Select Date:", Margin = new Thickness(5) });
+            stackPanel.Children.Add(new DatePicker { Width = 200, SelectedDate = SelectedDate, Margin = new Thickness(5) });
+            stackPanel.Children.Add(new Button { Content = "Show Largest Receipt", Width = 200, Margin = new Thickness(5), Command = ShowLargestReceiptCommand });
+            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = new DataGrid { AutoGenerateColumns = true, ItemsSource = LargestReceipt } });
             return stackPanel;
         }
+
 
         private void ListProductsByManufacturer(object parameter)
         {
@@ -225,8 +222,11 @@ namespace Supermarket.ViewModels
 
         private void ShowLargestReceipt(object parameter)
         {
-            LargestReceipt = new ObservableCollection<ReceiptReport>(reportsBLL.GetLargestReceipt(SelectedDate));
-            NotifyPropertyChanged(nameof(LargestReceipt));
+            if (SelectedDate != null)
+            {
+                LargestReceipt = new ObservableCollection<ReceiptReport>(reportsBLL.GetLargestReceiptByDate(SelectedDate));
+                NotifyPropertyChanged(nameof(LargestReceipt));
+            }
         }
     }
 
@@ -252,6 +252,13 @@ namespace Supermarket.ViewModels
     {
         public int SaleID { get; set; }
         public decimal TotalAmount { get; set; }
+        public int ReceiptID { get; set; }
+        public DateTime ReceiptDate { get; set; }
+        public int CashierID { get; set; }
+        public decimal AmountCollected { get; set; }
+        public int ProductID { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal Subtotal { get; set; }
     }
 }
 

@@ -25,9 +25,10 @@ namespace Supermarket.Models.BusinessLogic
             return reportsDAL.GetSalesByUser(userID, month, year);
         }
 
-        public List<ReceiptReport> GetLargestReceipt(DateTime date)
+        public List<ReceiptReport> GetLargestReceiptByDate(DateTime date)
         {
-            return reportsDAL.GetLargestReceipt(date);
+            return reportsDAL.GetLargestReceiptByDate(date);
         }
+
     }
 }

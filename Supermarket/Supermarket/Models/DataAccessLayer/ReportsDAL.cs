@@ -99,13 +99,13 @@ namespace Supermarket.Models.DataAccessLayer
             return sales;
         }
 
-        public List<ReceiptReport> GetLargestReceipt(DateTime date)
+        public List<ReceiptReport> GetLargestReceiptByDate(DateTime date)
         {
             List<ReceiptReport> receipts = new List<ReceiptReport>();
 
             using (SqlConnection con = DALHelper.Connection)
             {
-                SqlCommand cmd = new SqlCommand("GetLargestReceipt", con)
+                SqlCommand cmd = new SqlCommand("GetLargestReceiptByDate", con)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -118,8 +118,13 @@ namespace Supermarket.Models.DataAccessLayer
                 {
                     ReceiptReport receipt = new ReceiptReport
                     {
-                        SaleID = (int)reader["SaleID"],
-                        TotalAmount = (decimal)reader["TotalAmount"]
+                        ReceiptID = (int)reader["ReceiptID"],
+                        ReceiptDate = (DateTime)reader["ReceiptDate"],
+                        CashierID = (int)reader["CashierID"],
+                        AmountCollected = (decimal)reader["AmountCollected"],
+                        ProductID = (int)reader["ProductID"],
+                        Quantity = (decimal)reader["Quantity"],
+                        Subtotal = (decimal)reader["Subtotal"]
                     };
                     receipts.Add(receipt);
                 }
@@ -128,4 +133,4 @@ namespace Supermarket.Models.DataAccessLayer
             return receipts;
         }
     }
-}
+ }
