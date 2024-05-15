@@ -179,7 +179,6 @@ namespace Supermarket.ViewModels
 
             wrapPanel.Children.Add(new TextBlock { Text = "Select Month:", Margin = new Thickness(5) });
 
-            // Set the DatePicker's SelectedDate to January 2024
             var datePicker = new DatePicker
             {
                 Width = 150,

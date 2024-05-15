@@ -9,8 +9,8 @@ namespace Supermarket.Models.EntityLayer
         private string barcode;
         private int? categoryID;
         private int? manufacturerID;
-        private string manufacturerName; // New property
-        private string categoryName; // New property
+        private string manufacturerName; 
+        private string categoryName; 
         private bool isActive;
 
         public int ProductID

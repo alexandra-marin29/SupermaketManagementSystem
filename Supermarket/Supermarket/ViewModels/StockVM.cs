@@ -48,20 +48,19 @@ namespace Supermarket.ViewModels
             EditStockCommand = new RelayCommand<object>(EditStock);
             DeleteStockCommand = new RelayCommand<object>(DeleteStock);
 
-            // Retrieve commercial markup from configuration and ensure it's interpreted as a percentage
             string markupString = ConfigurationManager.AppSettings["CommercialMarkup"];
             if (decimal.TryParse(markupString, out decimal markup))
             {
-                commercialMarkup = markup / 100; // Convert to percentage
+                commercialMarkup = markup / 100; 
             }
             else
             {
-                commercialMarkup = 0.20m; // Default to 20% if parsing fails
+                commercialMarkup = 0.20m; 
             }
 
-            NewSupplyDate = new DateTime(2024, 1, 1); // Default date starting in 2024
-            NewExpirationDate = new DateTime(2024, 1, 1); // Default date starting in 2024
-            IsAddingNewStock = true; // Initially, set to true when adding a new stock
+            NewSupplyDate = new DateTime(2024, 1, 1);
+            NewExpirationDate = new DateTime(2024, 1, 1); 
+            IsAddingNewStock = true; 
         }
 
         public Stock SelectedStock
@@ -80,13 +79,13 @@ namespace Supermarket.ViewModels
                     NewPurchasePrice = selectedStock.PurchasePrice;
                     NewSalePrice = selectedStock.SalePrice;
                     NewProduct = Products.FirstOrDefault(p => p.ProductID == selectedStock.ProductID);
-                    IsAddingNewStock = false; // Set to false when editing an existing stock
-                    IsPurchasePriceReadOnly = true; // Set to true to make the purchase price read-only
+                    IsAddingNewStock = false; 
+                    IsPurchasePriceReadOnly = true; 
                 }
                 else
                 {
-                    IsAddingNewStock = true; // Set to true when adding a new stock
-                    IsPurchasePriceReadOnly = false; // Set to false to make the purchase price editable
+                    IsAddingNewStock = true; 
+                    IsPurchasePriceReadOnly = false; 
                 }
             }
         }
@@ -202,7 +201,7 @@ namespace Supermarket.ViewModels
                     PurchasePrice = NewPurchasePrice,
                     SalePrice = NewSalePrice,
                     IsActive = true,
-                    ProductName = NewProduct.ProductName // Set ProductName when adding new stock
+                    ProductName = NewProduct.ProductName
                 };
 
                 stockBLL.AddStock(newStock);
@@ -221,7 +220,7 @@ namespace Supermarket.ViewModels
                 SelectedStock.SupplyDate = NewSupplyDate;
                 SelectedStock.ExpirationDate = NewExpirationDate;
                 SelectedStock.SalePrice = NewSalePrice;
-                SelectedStock.ProductName = NewProduct.ProductName; // Update ProductName when editing stock
+                SelectedStock.ProductName = NewProduct.ProductName; 
 
                 stockBLL.EditStock(SelectedStock);
                 int index = Stocks.IndexOf(SelectedStock);
@@ -253,8 +252,8 @@ namespace Supermarket.ViewModels
             NewPurchasePrice = 0;
             NewSalePrice = 0;
             NewProduct = null;
-            IsAddingNewStock = true; // Reset to true for adding new stock
-            IsPurchasePriceReadOnly = false; // Reset to false to make the purchase price editable
+            IsAddingNewStock = true; 
+            IsPurchasePriceReadOnly = false; 
         }
     }
 }

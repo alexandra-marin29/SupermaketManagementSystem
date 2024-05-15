@@ -85,7 +85,6 @@ namespace Supermarket.ViewModels
                 SelectedManufacturer.ManufacturerName = NewManufacturerName;
                 SelectedManufacturer.CountryOfOrigin = NewCountryOfOrigin;
                 manufacturerBLL.EditManufacturer(SelectedManufacturer);
-                // Refresh the ObservableCollection
                 int index = Manufacturers.IndexOf(SelectedManufacturer);
                 if (index >= 0)
                 {

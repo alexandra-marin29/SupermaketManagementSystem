@@ -9,7 +9,7 @@ namespace Supermarket.Models.EntityLayer
         private int productID;
         private decimal quantity;
         private decimal subtotal;
-        private string productName; // Add this property
+        private string productName;
 
         public int ReceiptDetailID
         {

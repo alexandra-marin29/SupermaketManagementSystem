@@ -18,7 +18,7 @@ namespace Supermarket.Models.EntityLayer
         private decimal purchasePrice;
         private decimal salePrice;
         private bool isActive;
-        private string productName; // Add this line
+        private string productName; 
 
         public int StockID
         {

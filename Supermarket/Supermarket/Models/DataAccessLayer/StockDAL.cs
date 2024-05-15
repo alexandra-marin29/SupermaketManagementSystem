@@ -39,7 +39,7 @@ namespace Supermarket.Models.DataAccessLayer
             return stocks;
         }
 
-        public List<Stock> GetStocksByProductId(int productId) // Add this method
+        public List<Stock> GetStocksByProductId(int productId) 
         {
             List<Stock> stocks = new List<Stock>();
 

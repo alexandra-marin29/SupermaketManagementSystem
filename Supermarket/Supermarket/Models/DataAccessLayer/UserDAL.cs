@@ -131,7 +131,7 @@ namespace Supermarket.Models.DataAccessLayer
                     {
                         user = new User
                         {
-                            UserId = (int)reader["UserID"],  // Ensure this matches the column name in the database
+                            UserId = (int)reader["UserID"],  
                             Username = reader["Username"].ToString(),
                             Role = reader["Role"].ToString(),
                             IsActive = (bool)reader["IsActive"]

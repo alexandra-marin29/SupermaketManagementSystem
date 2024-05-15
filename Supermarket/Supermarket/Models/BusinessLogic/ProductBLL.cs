@@ -14,7 +14,7 @@ namespace Supermarket.Models.BusinessLogic
             return productDAL.GetAllProducts();
         }
 
-        public Product GetProductById(int productId) // Add this method
+        public Product GetProductById(int productId) 
         {
             return productDAL.GetProductById(productId);
         }

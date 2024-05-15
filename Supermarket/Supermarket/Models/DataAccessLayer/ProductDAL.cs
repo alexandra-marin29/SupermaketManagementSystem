@@ -80,7 +80,7 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@Barcode", product.Barcode);
                 cmd.Parameters.AddWithValue("@CategoryID", (object)product.CategoryID ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@ManufacturerID", (object)product.ManufacturerID ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IsActive", 1); // Set IsActive to 1 by default
+                cmd.Parameters.AddWithValue("@IsActive", 1);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
