@@ -14,7 +14,7 @@ namespace Supermarket.Models.DataAccessLayer
 
             using (SqlConnection con = DALHelper.Connection)
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Products WHERE IsActive = 1", con);
+                SqlCommand cmd = new SqlCommand("SELECT p.*, m.ManufacturerName, c.CategoryName FROM Products p LEFT JOIN Manufacturers m ON p.ManufacturerID = m.ManufacturerID LEFT JOIN Categories c ON p.CategoryID = c.CategoryID WHERE p.IsActive = 1", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -27,6 +27,8 @@ namespace Supermarket.Models.DataAccessLayer
                         Barcode = reader["Barcode"].ToString(),
                         CategoryID = reader["CategoryID"] != DBNull.Value ? (int?)reader["CategoryID"] : null,
                         ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int?)reader["ManufacturerID"] : null,
+                        ManufacturerName = reader["ManufacturerName"] != DBNull.Value ? reader["ManufacturerName"].ToString() : null,
+                        CategoryName = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"].ToString() : null,
                         IsActive = (bool)reader["IsActive"]
                     };
                     products.Add(product);
@@ -42,7 +44,7 @@ namespace Supermarket.Models.DataAccessLayer
 
             using (SqlConnection con = DALHelper.Connection)
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Products WHERE ProductID = @ProductID", con);
+                SqlCommand cmd = new SqlCommand("SELECT p.*, m.ManufacturerName, c.CategoryName FROM Products p LEFT JOIN Manufacturers m ON p.ManufacturerID = m.ManufacturerID LEFT JOIN Categories c ON p.CategoryID = c.CategoryID WHERE p.ProductID = @ProductID", con);
                 cmd.Parameters.AddWithValue("@ProductID", productId);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -56,6 +58,8 @@ namespace Supermarket.Models.DataAccessLayer
                         Barcode = reader["Barcode"].ToString(),
                         CategoryID = reader["CategoryID"] != DBNull.Value ? (int?)reader["CategoryID"] : null,
                         ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int?)reader["ManufacturerID"] : null,
+                        ManufacturerName = reader["ManufacturerName"] != DBNull.Value ? reader["ManufacturerName"].ToString() : null,
+                        CategoryName = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"].ToString() : null,
                         IsActive = (bool)reader["IsActive"]
                     };
                 }
@@ -145,6 +149,8 @@ namespace Supermarket.Models.DataAccessLayer
                         Barcode = reader["Barcode"].ToString(),
                         ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int?)reader["ManufacturerID"] : null,
                         CategoryID = reader["CategoryID"] != DBNull.Value ? (int?)reader["CategoryID"] : null,
+                        ManufacturerName = reader["ManufacturerName"] != DBNull.Value ? reader["ManufacturerName"].ToString() : null,
+                        CategoryName = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"].ToString() : null,
                         IsActive = (bool)reader["IsActive"]
                     };
                     products.Add(product);

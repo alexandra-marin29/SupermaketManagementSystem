@@ -9,6 +9,8 @@ namespace Supermarket.Models.EntityLayer
         private string barcode;
         private int? categoryID;
         private int? manufacturerID;
+        private string manufacturerName; // New property
+        private string categoryName; // New property
         private bool isActive;
 
         public int ProductID
@@ -58,6 +60,26 @@ namespace Supermarket.Models.EntityLayer
             {
                 manufacturerID = value;
                 NotifyPropertyChanged(nameof(ManufacturerID));
+            }
+        }
+
+        public string ManufacturerName
+        {
+            get { return manufacturerName; }
+            set
+            {
+                manufacturerName = value;
+                NotifyPropertyChanged(nameof(ManufacturerName));
+            }
+        }
+
+        public string CategoryName
+        {
+            get { return categoryName; }
+            set
+            {
+                categoryName = value;
+                NotifyPropertyChanged(nameof(CategoryName));
             }
         }
 

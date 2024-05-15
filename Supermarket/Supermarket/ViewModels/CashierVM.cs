@@ -205,7 +205,7 @@ namespace Supermarket.ViewModels
         private void SearchProducts(object parameter)
         {
             Products.Clear();
-            var productsList = productBLL.SearchProducts(ProductName, Barcode, ExpirationDate, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID);
+            var productsList = productBLL.SearchProducts(ProductName, Barcode, null, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID);
             foreach (var product in productsList)
             {
                 Products.Add(product);

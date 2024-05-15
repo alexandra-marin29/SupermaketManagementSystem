@@ -18,11 +18,11 @@
                 <StackPanel>
                     <WrapPanel>
                         <Label Content="Product Name:" />
-                        <ComboBox Width="150" IsEditable="True" Text="{Binding ProductName, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ProductNames}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding ProductName}" ItemsSource="{Binding ProductNames}" />
                     </WrapPanel>
                     <WrapPanel>
                         <Label Content="Barcode:" />
-                        <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Barcodes}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode}" ItemsSource="{Binding Barcodes}" />
                     </WrapPanel>
                     <WrapPanel>
                         <Label Content="Expiration Date:" />
@@ -46,7 +46,6 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding ProductName}" />
                         <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" />
-                        <DataGridTextColumn Header="Expiration Date" Binding="{Binding ExpirationDate, StringFormat=\{0:MM/dd/yyyy\}}" />
                         <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerName}" />
                         <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />
                     </DataGrid.Columns>
