@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Linq;
 using System.Windows.Input;
 using Supermarket.Models.BusinessLogic;
@@ -21,6 +22,8 @@ namespace Supermarket.ViewModels
         private decimal newPurchasePrice;
         private decimal newSalePrice;
         private Product newProduct;
+        private decimal commercialMarkup;
+        private bool isAddingNewStock;
 
         public ObservableCollection<Stock> Stocks { get; set; }
         public ObservableCollection<Product> Products { get; set; }
@@ -37,6 +40,11 @@ namespace Supermarket.ViewModels
             AddStockCommand = new RelayCommand<object>(AddStock);
             EditStockCommand = new RelayCommand<object>(EditStock);
             DeleteStockCommand = new RelayCommand<object>(DeleteStock);
+
+            // Retrieve commercial markup from configuration
+            commercialMarkup = decimal.Parse(ConfigurationManager.AppSettings["CommercialMarkup"]);
+
+            IsAddingNewStock = true; // Initially, set to true when adding a new stock
         }
 
         public Stock SelectedStock
@@ -55,6 +63,11 @@ namespace Supermarket.ViewModels
                     NewPurchasePrice = selectedStock.PurchasePrice;
                     NewSalePrice = selectedStock.SalePrice;
                     NewProduct = Products.FirstOrDefault(p => p.ProductID == selectedStock.ProductID);
+                    IsAddingNewStock = false; // Set to false when editing an existing stock
+                }
+                else
+                {
+                    IsAddingNewStock = true; // Set to true when adding a new stock
                 }
             }
         }
@@ -106,6 +119,8 @@ namespace Supermarket.ViewModels
             {
                 newPurchasePrice = value;
                 NotifyPropertyChanged(nameof(NewPurchasePrice));
+                // Automatically calculate the sale price
+                NewSalePrice = newPurchasePrice * (1 + commercialMarkup);
             }
         }
 
@@ -129,13 +144,20 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public bool IsAddingNewStock
+        {
+            get { return isAddingNewStock; }
+            set
+            {
+                isAddingNewStock = value;
+                NotifyPropertyChanged(nameof(IsAddingNewStock));
+            }
+        }
+
         private void AddStock(object parameter)
         {
             if (NewProduct != null && NewPurchasePrice > 0)
             {
-                decimal commercialMarkup = 0.20m; // Example markup, should be retrieved from configuration
-                NewSalePrice = NewPurchasePrice * (1 + commercialMarkup);
-
                 Stock newStock = new Stock
                 {
                     ProductID = NewProduct.ProductID,
@@ -190,6 +212,7 @@ namespace Supermarket.ViewModels
             NewPurchasePrice = 0;
             NewSalePrice = 0;
             NewProduct = null;
+            IsAddingNewStock = true; // Reset to true for adding new stock
         }
     }
 }

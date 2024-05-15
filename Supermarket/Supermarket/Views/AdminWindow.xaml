@@ -112,30 +112,32 @@
             </TabItem>
 
 
-
             <!-- Stocks Tab -->
             <TabItem Header="Stocks">
                 <Grid>
                     <StackPanel>
-                        <!-- First Row: Quantity, Unit of Measure, Supply Date, Expiration Date -->
+                        <!-- First Row: Quantity, Unit of Measure, Product -->
                         <WrapPanel Margin="10">
                             <Label Content="Quantity:"/>
                             <TextBox Width="100" Text="{Binding StockVM.NewQuantity, Mode=TwoWay}"/>
                             <Label Content="Unit of Measure:"/>
                             <TextBox Width="100" Text="{Binding StockVM.NewUnitOfMeasure, Mode=TwoWay}"/>
+                            <Label Content="Product:"/>
+                            <ComboBox Width="200" ItemsSource="{Binding StockVM.Products}" DisplayMemberPath="ProductName" SelectedItem="{Binding StockVM.NewProduct, Mode=TwoWay}"/>
+                        </WrapPanel>
+                        <!-- Second Row: Supply Date, Expiration Date -->
+                        <WrapPanel Margin="10">
                             <Label Content="Supply Date:"/>
                             <DatePicker Width="150" SelectedDate="{Binding StockVM.NewSupplyDate, Mode=TwoWay}"/>
                             <Label Content="Expiration Date:"/>
                             <DatePicker Width="150" SelectedDate="{Binding StockVM.NewExpirationDate, Mode=TwoWay}"/>
                         </WrapPanel>
-                        <!-- Second Row: Purchase Price, Sale Price, Product, Add Stock Button -->
+                        <!-- Third Row: Purchase Price, Sale Price, Add Stock Button -->
                         <WrapPanel Margin="10">
                             <Label Content="Purchase Price:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsAddingNewStock}"/>
                             <Label Content="Sale Price:"/>
                             <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}" IsEnabled="False"/>
-                            <Label Content="Product:"/>
-                            <ComboBox Width="200" ItemsSource="{Binding StockVM.Products}" DisplayMemberPath="ProductName" SelectedItem="{Binding StockVM.NewProduct, Mode=TwoWay}"/>
                             <Button Content="Add Stock" Width="100" Margin="10,0,0,0" Command="{Binding StockVM.AddStockCommand}"/>
                         </WrapPanel>
                         <!-- Edit and Delete Buttons -->
@@ -156,6 +158,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
+
 
 
             <!-- Reports Tab -->
