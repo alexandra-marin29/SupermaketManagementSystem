@@ -116,6 +116,8 @@ namespace Supermarket.ViewModels
             ShowLargestReceiptCommand = new RelayCommand<object>(ShowLargestReceipt);
 
             InitializeReportTypes();
+            SelectedDate = new DateTime(2024, 1, 1);
+            SelectedMonth = new DateTime(2024, 1, 1);
 
         }
 
@@ -164,30 +166,73 @@ namespace Supermarket.ViewModels
         {
             var stackPanel = new StackPanel();
             stackPanel.Children.Add(new TextBlock { Text = "Select Cashier:", Margin = new Thickness(5) });
-            var cashierComboBox = new ComboBox { Width = 200, ItemsSource = Cashiers, DisplayMemberPath = "Username", SelectedItem = SelectedCashier, Margin = new Thickness(5) };
-            cashierComboBox.SetBinding(ComboBox.SelectedItemProperty, new System.Windows.Data.Binding("SelectedCashier") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
-            stackPanel.Children.Add(cashierComboBox);
-            stackPanel.Children.Add(new TextBlock { Text = "Select Month:", Margin = new Thickness(5) });
-            var datePicker = new DatePicker { Width = 200, SelectedDate = SelectedMonth, Margin = new Thickness(5) };
-            datePicker.SetBinding(DatePicker.SelectedDateProperty, new System.Windows.Data.Binding("SelectedMonth") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
-            stackPanel.Children.Add(datePicker);
-            var showButton = new Button { Content = "Show Sales by User", Width = 200, Margin = new Thickness(5), Command = ShowSalesByUserCommand };
-            stackPanel.Children.Add(showButton);
-            var salesByUserDataGrid = new DataGrid { AutoGenerateColumns = true, Height = 150, ItemsSource = SalesByUser };
-            salesByUserDataGrid.SetBinding(DataGrid.ItemsSourceProperty, new System.Windows.Data.Binding("SalesByUser") { Source = this });
-            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = salesByUserDataGrid });
+
+            var wrapPanel = new WrapPanel();
+            wrapPanel.Children.Add(new ComboBox
+            {
+                Width = 150,
+                ItemsSource = Cashiers,
+                DisplayMemberPath = "Username",
+                SelectedItem = SelectedCashier,
+                Margin = new Thickness(5)
+            });
+
+            wrapPanel.Children.Add(new TextBlock { Text = "Select Month:", Margin = new Thickness(5) });
+
+            // Set the DatePicker's SelectedDate to January 2024
+            var datePicker = new DatePicker
+            {
+                Width = 150,
+                SelectedDate = SelectedMonth != default(DateTime) ? SelectedMonth : new DateTime(2024, 1, 1),
+                Margin = new Thickness(5)
+            };
+            wrapPanel.Children.Add(datePicker);
+
+            wrapPanel.Children.Add(new Button
+            {
+                Content = "Show Sales by User",
+                Width = 150,
+                Margin = new Thickness(5),
+                Command = ShowSalesByUserCommand
+            });
+
+            stackPanel.Children.Add(wrapPanel);
+            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = new DataGrid { AutoGenerateColumns = true, ItemsSource = SalesByUser } });
             return stackPanel;
         }
+
 
         private FrameworkElement CreateReceiptsView()
         {
             var stackPanel = new StackPanel();
             stackPanel.Children.Add(new TextBlock { Text = "Select Date:", Margin = new Thickness(5) });
-            stackPanel.Children.Add(new DatePicker { Width = 200, SelectedDate = SelectedDate, Margin = new Thickness(5) });
+
+            var datePicker = new DatePicker
+            {
+                Width = 200,
+                SelectedDate = new DateTime(2024, 1, 1),
+                DisplayDateStart = new DateTime(2024, 1, 1),
+                DisplayDateEnd = new DateTime(2024, 12, 31),
+                Margin = new Thickness(5)
+            };
+            datePicker.SelectedDateChanged += (s, e) =>
+            {
+                if (datePicker.SelectedDate < new DateTime(2024, 1, 1))
+                {
+                    datePicker.SelectedDate = new DateTime(2024, 1, 1);
+                }
+                else if (datePicker.SelectedDate > new DateTime(2024, 12, 31))
+                {
+                    datePicker.SelectedDate = new DateTime(2024, 12, 31);
+                }
+            };
+
+            stackPanel.Children.Add(datePicker);
             stackPanel.Children.Add(new Button { Content = "Show Largest Receipt", Width = 200, Margin = new Thickness(5), Command = ShowLargestReceiptCommand });
             stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = new DataGrid { AutoGenerateColumns = true, ItemsSource = LargestReceipt } });
             return stackPanel;
         }
+
 
 
         private void ListProductsByManufacturer(object parameter)
