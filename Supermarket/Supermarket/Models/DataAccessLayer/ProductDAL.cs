@@ -13,10 +13,7 @@ namespace Supermarket.Models.DataAccessLayer
 
             using (SqlConnection con = DALHelper.Connection)
             {
-                SqlCommand cmd = new SqlCommand("GetActiveProducts", con)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Products WHERE IsActive = 1", con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -38,6 +35,34 @@ namespace Supermarket.Models.DataAccessLayer
             return products;
         }
 
+        public Product GetProductById(int productId) // Add this method
+        {
+            Product product = null;
+
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Products WHERE ProductID = @ProductID", con);
+                cmd.Parameters.AddWithValue("@ProductID", productId);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    product = new Product
+                    {
+                        ProductID = (int)reader["ProductID"],
+                        ProductName = reader["ProductName"].ToString(),
+                        Barcode = reader["Barcode"].ToString(),
+                        CategoryID = (int)reader["CategoryID"],
+                        ManufacturerID = (int)reader["ManufacturerID"],
+                        IsActive = (bool)reader["IsActive"]
+                    };
+                }
+            }
+
+            return product;
+        }
+
         public void AddProduct(Product product)
         {
             using (SqlConnection con = DALHelper.Connection)
@@ -50,6 +75,7 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@Barcode", product.Barcode);
                 cmd.Parameters.AddWithValue("@CategoryID", product.CategoryID);
                 cmd.Parameters.AddWithValue("@ManufacturerID", product.ManufacturerID);
+                cmd.Parameters.AddWithValue("@IsActive", product.IsActive);
 
                 con.Open();
                 cmd.ExecuteNonQuery();

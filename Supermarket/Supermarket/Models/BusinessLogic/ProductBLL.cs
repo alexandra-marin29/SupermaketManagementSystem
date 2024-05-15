@@ -13,6 +13,11 @@ namespace Supermarket.Models.BusinessLogic
             return productDAL.GetAllProducts();
         }
 
+        public Product GetProductById(int productId) // Add this method
+        {
+            return productDAL.GetProductById(productId);
+        }
+
         public void AddProduct(Product product)
         {
             productDAL.AddProduct(product);

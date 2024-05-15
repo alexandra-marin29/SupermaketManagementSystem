@@ -35,6 +35,11 @@ namespace Supermarket.ViewModels
         public StockVM()
         {
             Stocks = new ObservableCollection<Stock>(stockBLL.GetAllStocks());
+            foreach (var stock in Stocks)
+            {
+                stock.ProductName = productBLL.GetProductById(stock.ProductID).ProductName;
+            }
+
             Products = new ObservableCollection<Product>(productBLL.GetAllProducts());
 
             AddStockCommand = new RelayCommand<object>(AddStock);
@@ -177,10 +182,12 @@ namespace Supermarket.ViewModels
                     ExpirationDate = NewExpirationDate,
                     PurchasePrice = NewPurchasePrice,
                     SalePrice = NewSalePrice,
-                    IsActive = true
+                    IsActive = true,
+                    ProductName = NewProduct.ProductName // Set ProductName when adding new stock
                 };
 
                 stockBLL.AddStock(newStock);
+                newStock.ProductName = productBLL.GetProductById(newStock.ProductID).ProductName;
                 Stocks.Add(newStock);
                 ClearFields();
             }
@@ -195,6 +202,7 @@ namespace Supermarket.ViewModels
                 SelectedStock.SupplyDate = NewSupplyDate;
                 SelectedStock.ExpirationDate = NewExpirationDate;
                 SelectedStock.SalePrice = NewSalePrice;
+                SelectedStock.ProductName = NewProduct.ProductName; // Update ProductName when editing stock
 
                 stockBLL.EditStock(SelectedStock);
                 int index = Stocks.IndexOf(SelectedStock);
@@ -226,3 +234,6 @@ namespace Supermarket.ViewModels
         }
     }
 }
+
+
+

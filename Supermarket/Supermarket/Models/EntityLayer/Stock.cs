@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace Supermarket.Models.EntityLayer
         private decimal purchasePrice;
         private decimal salePrice;
         private bool isActive;
+        private string productName; // Add this line
 
         public int StockID
         {
@@ -105,6 +107,16 @@ namespace Supermarket.Models.EntityLayer
             {
                 isActive = value;
                 NotifyPropertyChanged(nameof(IsActive));
+            }
+        }
+
+        public string ProductName 
+        {
+            get { return productName; }
+            set
+            {
+                productName = value;
+                NotifyPropertyChanged(nameof(ProductName));
             }
         }
     }
