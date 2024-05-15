@@ -153,36 +153,38 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            
+
 
 
             <!-- Reports Tab -->
             <TabItem Header="Reports">
                 <Grid>
                     <StackPanel>
-                        <!-- Report 1: Products by Manufacturer -->
+                        <!-- Products by Manufacturer -->
                         <TextBlock Text="Select Manufacturer:" Margin="5"/>
-                        <ComboBox x:Name="ManufacturerComboBox" Width="200" Margin="5"/>
-                        <Button Content="List Products by Manufacturer" Width="200" Margin="5"/>
-                        <DataGrid x:Name="ProductsByManufacturerDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+                        <ComboBox Width="200" ItemsSource="{Binding ReportsVM.Manufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding ReportsVM.SelectedManufacturer}" Margin="5"/>
+                        <Button Content="List Products by Manufacturer" Width="200" Margin="5" Command="{Binding ReportsVM.ListProductsByManufacturerCommand}"/>
+                        <DataGrid x:Name="ProductsByManufacturerDataGrid" AutoGenerateColumns="True" Height="200" Margin="5" ItemsSource="{Binding ReportsVM.ProductsByManufacturer}"/>
 
-                        <!-- Report 2: Category Values -->
-                        <Button Content="Show Category Values" Width="200" Margin="5"/>
-                        <DataGrid x:Name="CategoryValuesDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+                        <!-- Category Values -->
+                        <TextBlock Text="Select Category:" Margin="5"/>
+                        <ComboBox Width="200" ItemsSource="{Binding ReportsVM.Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding ReportsVM.SelectedCategory}" Margin="5"/>
+                        <Button Content="Show Category Values" Width="200" Margin="5" Command="{Binding ReportsVM.ShowCategoryValuesCommand}"/>
+                        <DataGrid x:Name="CategoryValuesDataGrid" AutoGenerateColumns="True" Height="200" Margin="5" ItemsSource="{Binding ReportsVM.CategoryValues}"/>
 
-                        <!-- Report 3: Sales by User -->
-                        <TextBlock Text="Select User:" Margin="5"/>
-                        <ComboBox x:Name="UserComboBox" Width="200" Margin="5"/>
+                        <!-- Sales by User -->
+                        <TextBlock Text="Select Cashier:" Margin="5"/>
+                        <ComboBox Width="200" ItemsSource="{Binding ReportsVM.Cashiers}" DisplayMemberPath="Username" SelectedItem="{Binding ReportsVM.SelectedCashier}" Margin="5"/>
                         <TextBlock Text="Select Month:" Margin="5"/>
-                        <DatePicker x:Name="MonthPicker" Width="200" Margin="5"/>
-                        <Button Content="Show Sales by User" Width="200" Margin="5"/>
-                        <DataGrid x:Name="SalesByUserDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+                        <DatePicker Width="200" SelectedDate="{Binding ReportsVM.SelectedMonth}" Margin="5"/>
+                        <Button Content="Show Sales by User" Width="200" Margin="5" Command="{Binding ReportsVM.ShowSalesByUserCommand}"/>
+                        <DataGrid x:Name="SalesByUserDataGrid" AutoGenerateColumns="True" Height="200" Margin="5" ItemsSource="{Binding ReportsVM.SalesByUser}"/>
 
-                        <!-- Report 4: Largest Receipt of the Day -->
+                        <!-- Largest Receipt of the Day -->
                         <TextBlock Text="Select Date:" Margin="5"/>
-                        <DatePicker x:Name="DatePicker" Width="200" Margin="5"/>
-                        <Button Content="Show Largest Receipt" Width="200" Margin="5"/>
-                        <DataGrid x:Name="LargestReceiptDataGrid" AutoGenerateColumns="True" Height="200" Margin="5"/>
+                        <DatePicker Width="200" SelectedDate="{Binding ReportsVM.SelectedDate}" Margin="5"/>
+                        <Button Content="Show Largest Receipt" Width="200" Margin="5" Command="{Binding ReportsVM.ShowLargestReceiptCommand}"/>
+                        <DataGrid x:Name="LargestReceiptDataGrid" AutoGenerateColumns="True" Height="200" Margin="5" ItemsSource="{Binding ReportsVM.LargestReceipt}"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

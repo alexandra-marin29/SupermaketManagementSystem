@@ -35,6 +35,32 @@ namespace Supermarket.Models.DataAccessLayer
             return users;
         }
 
+        public List<User> GetAllCashiers()
+        {
+            List<User> cashiers = new List<User>();
+
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Users WHERE Role = 'Cashier' AND IsActive = 1", con);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    User user = new User
+                    {
+                        UserId = (int)reader["UserID"],
+                        Username = reader["Username"].ToString(),
+                        Role = reader["Role"].ToString(),
+                        IsActive = (bool)reader["IsActive"]
+                    };
+                    cashiers.Add(user);
+                }
+            }
+
+            return cashiers;
+        }
+
         public void AddUser(User user)
         {
             using (SqlConnection con = DALHelper.Connection)

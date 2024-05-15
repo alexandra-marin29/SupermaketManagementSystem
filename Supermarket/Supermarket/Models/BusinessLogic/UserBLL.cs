@@ -13,6 +13,12 @@ namespace Supermarket.Models.BusinessLogic
             return userDAL.GetAllUsers();
         }
 
+        public List<User> GetAllCashiers()
+        {
+            return userDAL.GetAllCashiers();
+        }
+
+
         public void AddUser(User user)
         {
             userDAL.AddUser(user);
