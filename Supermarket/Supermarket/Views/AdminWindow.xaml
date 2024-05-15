@@ -118,7 +118,7 @@
                     <StackPanel>
                         <WrapPanel Margin="10">
                             <Label Content="Quantity:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewQuantity, Mode=TwoWay}"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewQuantity, Mode=TwoWay, StringFormat=F2}"/>
                             <Label Content="Unit Of Measure:"/>
                             <TextBox Width="100" Text="{Binding StockVM.NewUnitOfMeasure, Mode=TwoWay}"/>
                             <Label Content="Product:"/>
