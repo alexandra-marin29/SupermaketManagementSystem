@@ -9,6 +9,7 @@ namespace Supermarket.Views
         public CategoryVM CategoryVM { get; set; }
         public ProductVM ProductVM { get; set; }
         public StockVM StockVM { get; set; }
+        public ManufacturerVM ManufacturerVM { get; set; }
 
         public AdminWindowVM()
         {
@@ -16,6 +17,7 @@ namespace Supermarket.Views
             CategoryVM = new CategoryVM();
             ProductVM = new ProductVM(); 
             StockVM = new StockVM();
+            ManufacturerVM = new ManufacturerVM();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
