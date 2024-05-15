@@ -38,7 +38,7 @@ namespace Supermarket.Models.DataAccessLayer
             return products;
         }
 
-        public List<CategoryValueReport> GetCategoryValues()
+        public List<CategoryValueReport> GetCategoryValues(int categoryID)
         {
             List<CategoryValueReport> categories = new List<CategoryValueReport>();
 
@@ -48,6 +48,7 @@ namespace Supermarket.Models.DataAccessLayer
                 {
                     CommandType = CommandType.StoredProcedure
                 };
+                cmd.Parameters.AddWithValue("@CategoryID", categoryID);
 
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -65,6 +66,7 @@ namespace Supermarket.Models.DataAccessLayer
 
             return categories;
         }
+
 
         public List<SalesReport> GetSalesByUser(int userID, int month, int year)
         {
@@ -127,5 +129,3 @@ namespace Supermarket.Models.DataAccessLayer
         }
     }
 }
-
-

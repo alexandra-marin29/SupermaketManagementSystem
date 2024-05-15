@@ -1,5 +1,6 @@
 ﻿using Supermarket.ViewModels;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace Supermarket.Views
 {
@@ -16,11 +17,10 @@ namespace Supermarket.Views
         {
             UserVM = new UserVM();
             CategoryVM = new CategoryVM();
-            ProductVM = new ProductVM(); 
+            ProductVM = new ProductVM();
             StockVM = new StockVM();
             ManufacturerVM = new ManufacturerVM();
             ReportsVM = new ReportsVM();
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -28,6 +28,21 @@ namespace Supermarket.Views
         protected void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public ObservableCollection<ReportType> ReportTypes
+        {
+            get { return ReportsVM.ReportTypes; }
+        }
+
+        public ReportType SelectedReportType
+        {
+            get { return ReportsVM.SelectedReportType; }
+            set
+            {
+                ReportsVM.SelectedReportType = value;
+                NotifyPropertyChanged(nameof(SelectedReportType));
+            }
         }
     }
 }

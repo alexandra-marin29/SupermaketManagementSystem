@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Supermarket.Models.DataAccessLayer;
-using Supermarket.Models.EntityLayer;
 using Supermarket.ViewModels;
 
 namespace Supermarket.Models.BusinessLogic
@@ -15,10 +14,11 @@ namespace Supermarket.Models.BusinessLogic
             return reportsDAL.GetProductsByManufacturer(manufacturerID);
         }
 
-        public List<CategoryValueReport> GetCategoryValues()
+        public List<CategoryValueReport> GetCategoryValues(int categoryID)
         {
-            return reportsDAL.GetCategoryValues();
+            return reportsDAL.GetCategoryValues(categoryID);
         }
+
 
         public List<SalesReport> GetSalesByUser(int userID, int month, int year)
         {
