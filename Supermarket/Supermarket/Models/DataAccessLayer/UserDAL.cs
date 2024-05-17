@@ -131,7 +131,7 @@ namespace Supermarket.Models.DataAccessLayer
                     {
                         user = new User
                         {
-                            UserId = (int)reader["UserID"],  
+                            UserId = (int)reader["UserID"],
                             Username = reader["Username"].ToString(),
                             Role = reader["Role"].ToString(),
                             IsActive = (bool)reader["IsActive"]
@@ -149,6 +149,19 @@ namespace Supermarket.Models.DataAccessLayer
                 {
                     con.Close();
                 }
+            }
+        }
+        public bool IsUsernameExists(string username)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Users WHERE Username = @Username AND IsActive = 1", con);
+                cmd.Parameters.AddWithValue("@Username", username);
+
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+
+                return count > 0;
             }
         }
     }

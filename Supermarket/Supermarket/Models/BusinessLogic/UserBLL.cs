@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Supermarket.Models.DataAccessLayer;
 using Supermarket.Models.EntityLayer;
 
@@ -20,7 +21,14 @@ namespace Supermarket.Models.BusinessLogic
 
         public void AddUser(User user)
         {
-            userDAL.AddUser(user);
+            if (!userDAL.IsUsernameExists(user.Username))
+            {
+                userDAL.AddUser(user);
+            }
+            else
+            {
+                throw new Exception("Username already exists.");
+            }
         }
 
         public void EditUser(User user)

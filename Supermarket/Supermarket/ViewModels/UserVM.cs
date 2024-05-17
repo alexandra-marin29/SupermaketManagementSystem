@@ -158,12 +158,19 @@ namespace Supermarket.ViewModels
         {
             if (ValidateUserInputs(NewUsername, NewPassword, NewRole))
             {
-                User newUser = new User { Username = NewUsername, Password = NewPassword, Role = NewRole, IsActive = true };
-                userBLL.AddUser(newUser);
-                Users.Add(newUser);
-                NewUsername = string.Empty;
-                NewPassword = string.Empty;
-                NewRole = string.Empty;
+                try
+                {
+                    User newUser = new User { Username = NewUsername, Password = NewPassword, Role = NewRole, IsActive = true };
+                    userBLL.AddUser(newUser);
+                    Users.Add(newUser);
+                    NewUsername = string.Empty;
+                    NewPassword = string.Empty;
+                    NewRole = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
