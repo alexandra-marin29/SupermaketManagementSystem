@@ -102,7 +102,11 @@ namespace Supermarket.ViewModels
                     NewUsername = selectedUser.Username;
                     NewPassword = selectedUser.Password;
                     NewRole = selectedUser.Role;
-                    IsRoleEditable = string.IsNullOrEmpty(selectedUser.Role); 
+                    IsRoleEditable = string.IsNullOrEmpty(selectedUser.Role);
+                }
+                else
+                {
+                    IsRoleEditable = true; // Default value when no user is selected
                 }
             }
         }
@@ -134,6 +138,7 @@ namespace Supermarket.ViewModels
             AddUserCommand = new RelayCommand<object>(AddUser);
             EditUserCommand = new RelayCommand<object>(EditUser);
             DeleteUserCommand = new RelayCommand<object>(DeleteUser);
+            IsRoleEditable = true; // Set default value here
         }
 
         public UserVM(Window loginWindow) : this()
@@ -184,6 +189,7 @@ namespace Supermarket.ViewModels
                 NewUsername = string.Empty;
                 NewPassword = string.Empty;
                 NewRole = string.Empty;
+                IsRoleEditable = true; // Reset to default after adding
             }
         }
 
@@ -191,7 +197,7 @@ namespace Supermarket.ViewModels
         {
             if (SelectedUser != null && ValidateUserInputs(NewUsername, NewPassword, SelectedUser.Role))
             {
-                string originalUsername = SelectedUser.Username; 
+                string originalUsername = SelectedUser.Username;
                 string originalPassword = SelectedUser.Password;
                 string originalRole = SelectedUser.Role;
 
@@ -208,6 +214,7 @@ namespace Supermarket.ViewModels
                     NewPassword = string.Empty;
                     NewRole = string.Empty;
                     SelectedUser = null;
+                    IsRoleEditable = true; // Reset to default after editing
                 }
                 catch (Exception ex)
                 {
@@ -228,6 +235,7 @@ namespace Supermarket.ViewModels
             {
                 userBLL.DeleteUser(SelectedUser.UserId);
                 Users.Remove(SelectedUser);
+                IsRoleEditable = true; // Reset to default after deleting
             }
         }
 
