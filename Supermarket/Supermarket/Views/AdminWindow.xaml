@@ -18,7 +18,7 @@
                             <Label Content="Password:"/>
                             <TextBox Width="150" Text="{Binding UserVM.NewPassword, Mode=TwoWay}"/>
                             <Label Content="Role:"/>
-                            <ComboBox Width="100" ItemsSource="{Binding UserVM.AvailableRoles}" SelectedItem="{Binding UserVM.NewRole, Mode=TwoWay}"/>
+                            <ComboBox Width="100" ItemsSource="{Binding UserVM.AvailableRoles}" SelectedItem="{Binding UserVM.NewRole, Mode=TwoWay}" IsEnabled="{Binding UserVM.IsRoleEditable}"/>
                             <Button Content="Add User" Width="100" Margin="5" Command="{Binding UserVM.AddUserCommand}"/>
                         </WrapPanel>
                         <Button Content="Edit User" Width="100" Margin="5" Command="{Binding UserVM.EditUserCommand}"/>
@@ -32,6 +32,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
+
 
             <TabItem Header="Categories">
                 <Grid>

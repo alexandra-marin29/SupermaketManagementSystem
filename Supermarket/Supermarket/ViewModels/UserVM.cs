@@ -2,12 +2,12 @@
 using Supermarket.Views;
 using System;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows;
 using Supermarket.Models;
 using Supermarket.Models.EntityLayer;
 using Supermarket.Models.BusinessLogic;
-using System.Text.RegularExpressions;
 
 namespace Supermarket.ViewModels
 {
@@ -97,6 +97,27 @@ namespace Supermarket.ViewModels
             {
                 selectedUser = value;
                 NotifyPropertyChanged(nameof(SelectedUser));
+                if (selectedUser != null)
+                {
+                    NewUsername = selectedUser.Username;
+                    NewPassword = selectedUser.Password;
+                    NewRole = selectedUser.Role;
+                    IsRoleEditable = string.IsNullOrEmpty(selectedUser.Role); 
+                }
+            }
+        }
+
+        private bool isRoleEditable;
+        public bool IsRoleEditable
+        {
+            get { return isRoleEditable; }
+            set
+            {
+                if (isRoleEditable != value)
+                {
+                    isRoleEditable = value;
+                    NotifyPropertyChanged(nameof(IsRoleEditable));
+                }
             }
         }
 
@@ -153,34 +174,51 @@ namespace Supermarket.ViewModels
             }
         }
 
-
         private void AddUser(object parameter)
         {
             if (ValidateUserInputs(NewUsername, NewPassword, NewRole))
             {
-                try
-                {
-                    User newUser = new User { Username = NewUsername, Password = NewPassword, Role = NewRole, IsActive = true };
-                    userBLL.AddUser(newUser);
-                    Users.Add(newUser);
-                    NewUsername = string.Empty;
-                    NewPassword = string.Empty;
-                    NewRole = string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                User newUser = new User { Username = NewUsername, Password = NewPassword, Role = NewRole, IsActive = true };
+                userBLL.AddUser(newUser);
+                Users.Add(newUser);
+                NewUsername = string.Empty;
+                NewPassword = string.Empty;
+                NewRole = string.Empty;
             }
         }
 
         private void EditUser(object parameter)
         {
-            if (SelectedUser != null && ValidateUserInputs(SelectedUser.Username, SelectedUser.Password, SelectedUser.Role))
+            if (SelectedUser != null && ValidateUserInputs(NewUsername, NewPassword, SelectedUser.Role))
             {
-                userBLL.EditUser(SelectedUser);
-                int index = Users.IndexOf(SelectedUser);
-                Users[index] = SelectedUser;
+                string originalUsername = SelectedUser.Username; 
+                string originalPassword = SelectedUser.Password;
+                string originalRole = SelectedUser.Role;
+
+                try
+                {
+                    SelectedUser.Username = NewUsername;
+                    SelectedUser.Password = NewPassword;
+                    userBLL.EditUser(SelectedUser);
+
+                    int index = Users.IndexOf(SelectedUser);
+                    Users[index] = SelectedUser;
+
+                    NewUsername = string.Empty;
+                    NewPassword = string.Empty;
+                    NewRole = string.Empty;
+                    SelectedUser = null;
+                }
+                catch (Exception ex)
+                {
+                    if (SelectedUser != null)
+                    {
+                        SelectedUser.Username = originalUsername;
+                        SelectedUser.Password = originalPassword;
+                        SelectedUser.Role = originalRole;
+                    }
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
