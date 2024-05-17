@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Input;
 using Supermarket.Models.BusinessLogic;
 using Supermarket.Models.EntityLayer;
@@ -119,13 +122,27 @@ namespace Supermarket.ViewModels
 
         private void AddProduct(object parameter)
         {
-            if (!string.IsNullOrEmpty(NewProductName) && !string.IsNullOrEmpty(NewBarcode))
+            if (ValidateProductInputs(NewProductName, NewBarcode, NewCategoryName))
             {
+                if (Products.Any(p => p.Barcode == NewBarcode))
+                {
+                    MessageBox.Show("Barcode must be unique.");
+                    return;
+                }
+
                 if (NewCategory == null)
                 {
-                    NewCategory = new Category { CategoryName = NewCategoryName, IsActive = true };
-                    categoryBLL.AddCategory(NewCategory);
-                    Categories.Add(NewCategory);
+                    var existingCategory = Categories.FirstOrDefault(c => c.CategoryName == NewCategoryName);
+                    if (existingCategory == null)
+                    {
+                        NewCategory = new Category { CategoryName = NewCategoryName, IsActive = true };
+                        categoryBLL.AddCategory(NewCategory);
+                        Categories.Add(NewCategory);
+                    }
+                    else
+                    {
+                        NewCategory = existingCategory;
+                    }
                 }
 
                 if (NewManufacturer == null)
@@ -146,22 +163,33 @@ namespace Supermarket.ViewModels
 
                 productBLL.AddProduct(newProduct);
                 Products.Add(newProduct);
-                NewProductName = string.Empty;
-                NewBarcode = string.Empty;
-                NewCategory = null;
-                NewManufacturer = null;
+                ClearInputs();
             }
         }
 
         private void EditProduct(object parameter)
         {
-            if (SelectedProduct != null && !string.IsNullOrEmpty(NewProductName) && !string.IsNullOrEmpty(NewBarcode))
+            if (SelectedProduct != null && ValidateProductInputs(NewProductName, NewBarcode, NewCategoryName))
             {
+                if (Products.Any(p => p.Barcode == NewBarcode && p.ProductID != SelectedProduct.ProductID))
+                {
+                    MessageBox.Show("Barcode must be unique.");
+                    return;
+                }
+
                 if (NewCategory == null)
                 {
-                    NewCategory = new Category { CategoryName = NewCategoryName, IsActive = true };
-                    categoryBLL.AddCategory(NewCategory);
-                    Categories.Add(NewCategory);
+                    var existingCategory = Categories.FirstOrDefault(c => c.CategoryName == NewCategoryName);
+                    if (existingCategory == null)
+                    {
+                        NewCategory = new Category { CategoryName = NewCategoryName, IsActive = true };
+                        categoryBLL.AddCategory(NewCategory);
+                        Categories.Add(NewCategory);
+                    }
+                    else
+                    {
+                        NewCategory = existingCategory;
+                    }
                 }
 
                 if (NewManufacturer == null)
@@ -190,11 +218,7 @@ namespace Supermarket.ViewModels
                         IsActive = SelectedProduct.IsActive
                     };
                 }
-                NewProductName = string.Empty;
-                NewBarcode = string.Empty;
-                NewCategory = null;
-                NewManufacturer = null;
-                SelectedProduct = null;
+                ClearInputs();
             }
         }
 
@@ -204,12 +228,42 @@ namespace Supermarket.ViewModels
             {
                 productBLL.DeleteProduct(SelectedProduct.ProductID);
                 Products.Remove(SelectedProduct);
-                SelectedProduct = null;
-                NewProductName = string.Empty;
-                NewBarcode = string.Empty;
-                NewCategory = null;
-                NewManufacturer = null;
+                ClearInputs();
             }
+        }
+
+        private bool ValidateProductInputs(string productName, string barcode, string categoryName)
+        {
+            if (string.IsNullOrWhiteSpace(productName) || !Regex.IsMatch(productName, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Product name must be non-empty and contain only letters.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(barcode) || !Regex.IsMatch(barcode, @"^[0-9]+$"))
+            {
+                MessageBox.Show("Barcode must be non-empty and contain only digits.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(categoryName) || !Regex.IsMatch(categoryName, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Category name must be non-empty and contain only letters.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private void ClearInputs()
+        {
+            NewProductName = string.Empty;
+            NewBarcode = string.Empty;
+            NewCategory = null;
+            NewManufacturer = null;
+            NewCategoryName = string.Empty;
+            NewManufacturerName = string.Empty;
+            SelectedProduct = null;
         }
     }
 }

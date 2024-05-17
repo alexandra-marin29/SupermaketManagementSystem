@@ -78,6 +78,7 @@
             </TabItem>
 
             <!-- Products Tab -->
+            <!-- Products Tab -->
             <TabItem Header="Products">
                 <Grid>
                     <StackPanel>
@@ -91,26 +92,25 @@
                         <!-- Second Row: Category, Manufacturer, and Add Product Button -->
                         <WrapPanel Margin="10">
                             <Label Content="Category:"/>
-                            <ComboBox Width="200" ItemsSource="{Binding ProductVM.Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding ProductVM.NewCategory, Mode=TwoWay}"/>
+                            <ComboBox Width="200" ItemsSource="{Binding ProductVM.Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding ProductVM.NewCategory}" IsEditable="True" Text="{Binding ProductVM.NewCategoryName, Mode=TwoWay}"/>
                             <Label Content="Manufacturer:"/>
                             <ComboBox Width="200" ItemsSource="{Binding ProductVM.Manufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding ProductVM.NewManufacturer, Mode=TwoWay}"/>
                             <Button Content="Add Product" Width="100" Margin="10,0,0,0" Command="{Binding ProductVM.AddProductCommand}"/>
                         </WrapPanel>
-                        <!-- Edit and Delete Buttons -->
                         <Button Content="Edit Product" Width="100" Margin="5" Command="{Binding ProductVM.EditProductCommand}"/>
                         <Button Content="Delete Product" Width="100" Margin="5" Command="{Binding ProductVM.DeleteProductCommand}"/>
-                        <!-- DataGrid to display products -->
                         <DataGrid x:Name="ProductsDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="400" ItemsSource="{Binding ProductVM.Products}" SelectedItem="{Binding ProductVM.SelectedProduct}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" />
                                 <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" />
-                                <DataGridTextColumn Header="Category" Binding="{Binding CategoryID}" />
-                                <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerID}" />
+                                <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" />
+                                <DataGridTextColumn Header="Manufacturer" Binding="{Binding ManufacturerName}" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
                 </Grid>
             </TabItem>
+
 
 
             <!-- Stocks Tab -->
