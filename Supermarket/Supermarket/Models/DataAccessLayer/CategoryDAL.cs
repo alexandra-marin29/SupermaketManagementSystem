@@ -60,7 +60,14 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@CategoryName", category.CategoryName);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(ex.Message);
+                }
             }
         }
 
@@ -75,7 +82,28 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@CategoryId", categoryId);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+        }
+
+        public bool HasProducts(int categoryId)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE CategoryID = @CategoryId", con);
+                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+
+                return count > 0;
             }
         }
     }

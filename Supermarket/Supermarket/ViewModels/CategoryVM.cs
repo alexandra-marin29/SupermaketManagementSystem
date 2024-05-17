@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Input;
 using Supermarket.Models.BusinessLogic;
 using Supermarket.Models.EntityLayer;
@@ -51,25 +54,47 @@ namespace Supermarket.ViewModels
 
         private void AddCategory(object parameter)
         {
-            if (!string.IsNullOrEmpty(NewCategoryName))
+            if (ValidateCategoryName(NewCategoryName))
             {
-                Category newCategory = new Category { CategoryName = NewCategoryName, IsActive = true };
-                categoryBLL.AddCategory(newCategory);
-                Categories.Add(newCategory);
-                NewCategoryName = string.Empty;
+                try
+                {
+                    Category newCategory = new Category { CategoryName = NewCategoryName, IsActive = true };
+                    categoryBLL.AddCategory(newCategory);
+                    Categories.Add(newCategory);
+                    NewCategoryName = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
         private void EditCategory(object parameter)
         {
-            if (SelectedCategory != null && !string.IsNullOrEmpty(NewCategoryName))
+            if (SelectedCategory != null && ValidateCategoryName(NewCategoryName))
             {
-                SelectedCategory.CategoryName = NewCategoryName;
-                categoryBLL.EditCategory(SelectedCategory);
-                int index = Categories.IndexOf(SelectedCategory);
-                Categories[index] = SelectedCategory;
-                NewCategoryName = string.Empty;
-                SelectedCategory = null;
+                string originalCategoryName = SelectedCategory.CategoryName;
+
+                try
+                {
+                    SelectedCategory.CategoryName = NewCategoryName;
+                    categoryBLL.EditCategory(SelectedCategory);
+
+                    int index = Categories.IndexOf(SelectedCategory);
+                    Categories[index] = SelectedCategory;
+
+                    NewCategoryName = string.Empty;
+                    SelectedCategory = null;
+                }
+                catch (Exception ex)
+                {
+                    if (SelectedCategory != null)
+                    {
+                        SelectedCategory.CategoryName = originalCategoryName;
+                    }
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
@@ -77,11 +102,29 @@ namespace Supermarket.ViewModels
         {
             if (SelectedCategory != null)
             {
-                categoryBLL.DeleteCategory(SelectedCategory.CategoryID);
-                Categories.Remove(SelectedCategory);
-                SelectedCategory = null;
-                NewCategoryName = string.Empty;
+                try
+                {
+                    categoryBLL.DeleteCategory(SelectedCategory.CategoryID);
+                    Categories.Remove(SelectedCategory);
+                    SelectedCategory = null;
+                    NewCategoryName = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
+        }
+
+        private bool ValidateCategoryName(string categoryName)
+        {
+            if (string.IsNullOrWhiteSpace(categoryName) || !Regex.IsMatch(categoryName, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Category name must be non-empty and contain only letters.");
+                return false;
+            }
+
+            return true;
         }
     }
 }
