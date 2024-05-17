@@ -56,6 +56,8 @@ namespace Supermarket.ViewModels
                     NewBarcode = selectedProduct.Barcode;
                     NewCategory = Categories.FirstOrDefault(c => c.CategoryID == selectedProduct.CategoryID);
                     NewManufacturer = Manufacturers.FirstOrDefault(m => m.ManufacturerID == selectedProduct.ManufacturerID);
+                    NewCategoryName = selectedProduct.CategoryName;
+                    NewManufacturerName = selectedProduct.ManufacturerName;
                 }
             }
         }
@@ -147,9 +149,17 @@ namespace Supermarket.ViewModels
 
                 if (NewManufacturer == null)
                 {
-                    NewManufacturer = new Manufacturer { ManufacturerName = NewManufacturerName, IsActive = true };
-                    manufacturerBLL.AddManufacturer(NewManufacturer);
-                    Manufacturers.Add(NewManufacturer);
+                    var existingManufacturer = Manufacturers.FirstOrDefault(m => m.ManufacturerName == NewManufacturerName);
+                    if (existingManufacturer == null)
+                    {
+                        NewManufacturer = new Manufacturer { ManufacturerName = NewManufacturerName, IsActive = true };
+                        manufacturerBLL.AddManufacturer(NewManufacturer);
+                        Manufacturers.Add(NewManufacturer);
+                    }
+                    else
+                    {
+                        NewManufacturer = existingManufacturer;
+                    }
                 }
 
                 Product newProduct = new Product
@@ -158,6 +168,8 @@ namespace Supermarket.ViewModels
                     Barcode = NewBarcode,
                     CategoryID = NewCategory.CategoryID,
                     ManufacturerID = NewManufacturer.ManufacturerID,
+                    CategoryName = NewCategory.CategoryName,  // Set CategoryName
+                    ManufacturerName = NewManufacturer.ManufacturerName,  // Set ManufacturerName
                     IsActive = true
                 };
 
