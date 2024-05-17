@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Supermarket.Views"
         mc:Ignorable="d"
         Title="AdminWindow" Height="450" Width="800">
+   
     <Grid>
         <TabControl>
             <!-- Users Tab -->
@@ -164,7 +165,6 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-
 
         </TabControl>
     </Grid>

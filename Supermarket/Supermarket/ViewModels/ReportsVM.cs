@@ -35,8 +35,9 @@ namespace Supermarket.ViewModels
         private Manufacturer selectedManufacturer;
         private Category selectedCategory;
         private User selectedCashier;
+        private string selectedMonth;
         private DateTime selectedDate;
-        private DateTime selectedMonth;
+        private DateTime selectedMonthDateTime;
         private ReportType selectedReportType;
 
         public Manufacturer SelectedManufacturer
@@ -69,6 +70,16 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public string SelectedMonth
+        {
+            get { return selectedMonth; }
+            set
+            {
+                selectedMonth = value;
+                NotifyPropertyChanged(nameof(SelectedMonth));
+            }
+        }
+
         public DateTime SelectedDate
         {
             get { return selectedDate; }
@@ -79,13 +90,13 @@ namespace Supermarket.ViewModels
             }
         }
 
-        public DateTime SelectedMonth
+        public DateTime SelectedMonthDateTime
         {
-            get { return selectedMonth; }
+            get { return selectedMonthDateTime; }
             set
             {
-                selectedMonth = value;
-                NotifyPropertyChanged(nameof(SelectedMonth));
+                selectedMonthDateTime = value;
+                NotifyPropertyChanged(nameof(SelectedMonthDateTime));
             }
         }
 
@@ -117,7 +128,7 @@ namespace Supermarket.ViewModels
 
             InitializeReportTypes();
             SelectedDate = new DateTime(2024, 1, 1);
-            SelectedMonth = new DateTime(2024, 1, 1);
+            SelectedMonthDateTime = new DateTime(2024, 1, 1);
 
         }
 
@@ -132,11 +143,13 @@ namespace Supermarket.ViewModels
             };
         }
 
+       
+
         private FrameworkElement CreateManufacturerView()
         {
             var stackPanel = new StackPanel();
             stackPanel.Children.Add(new TextBlock { Text = "Select Manufacturer:", Margin = new Thickness(5) });
-            var manufacturerComboBox = new ComboBox { Width = 200, ItemsSource = Manufacturers, DisplayMemberPath = "ManufacturerName", SelectedItem = SelectedManufacturer, Margin = new Thickness(5) };
+            var manufacturerComboBox = new ComboBox { Width = 200, ItemsSource = Manufacturers, DisplayMemberPath = "ManufacturerName", Margin = new Thickness(5) };
             manufacturerComboBox.SetBinding(ComboBox.SelectedItemProperty, new System.Windows.Data.Binding("SelectedManufacturer") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
             stackPanel.Children.Add(manufacturerComboBox);
             var listButton = new Button { Content = "List Products by Manufacturer", Width = 200, Margin = new Thickness(5), Command = ListProductsByManufacturerCommand };
@@ -151,7 +164,7 @@ namespace Supermarket.ViewModels
         {
             var stackPanel = new StackPanel();
             stackPanel.Children.Add(new TextBlock { Text = "Select Category:", Margin = new Thickness(5) });
-            var categoryComboBox = new ComboBox { Width = 200, ItemsSource = Categories, DisplayMemberPath = "CategoryName", SelectedItem = SelectedCategory, Margin = new Thickness(5) };
+            var categoryComboBox = new ComboBox { Width = 200, ItemsSource = Categories, DisplayMemberPath = "CategoryName", Margin = new Thickness(5) };
             categoryComboBox.SetBinding(ComboBox.SelectedItemProperty, new System.Windows.Data.Binding("SelectedCategory") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
             stackPanel.Children.Add(categoryComboBox);
             var showButton = new Button { Content = "Show Category Values", Width = 200, Margin = new Thickness(5), Command = ShowCategoryValuesCommand };
@@ -179,13 +192,18 @@ namespace Supermarket.ViewModels
 
             wrapPanel.Children.Add(new TextBlock { Text = "Select Month:", Margin = new Thickness(5) });
 
-            var datePicker = new DatePicker
+            var monthComboBox = new ComboBox
             {
                 Width = 150,
-                SelectedDate = SelectedMonth != default(DateTime) ? SelectedMonth : new DateTime(2024, 1, 1),
+                ItemsSource = new string[]
+                {
+                    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+                },
+                SelectedItem = SelectedMonth,
                 Margin = new Thickness(5)
             };
-            wrapPanel.Children.Add(datePicker);
+            monthComboBox.SetBinding(ComboBox.SelectedItemProperty, new System.Windows.Data.Binding("SelectedMonth") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
+            wrapPanel.Children.Add(monthComboBox);
 
             wrapPanel.Children.Add(new Button
             {
@@ -200,7 +218,6 @@ namespace Supermarket.ViewModels
             return stackPanel;
         }
 
-
         private FrameworkElement CreateReceiptsView()
         {
             var stackPanel = new StackPanel();
@@ -214,17 +231,7 @@ namespace Supermarket.ViewModels
                 DisplayDateEnd = new DateTime(2024, 12, 31),
                 Margin = new Thickness(5)
             };
-            datePicker.SelectedDateChanged += (s, e) =>
-            {
-                if (datePicker.SelectedDate < new DateTime(2024, 1, 1))
-                {
-                    datePicker.SelectedDate = new DateTime(2024, 1, 1);
-                }
-                else if (datePicker.SelectedDate > new DateTime(2024, 12, 31))
-                {
-                    datePicker.SelectedDate = new DateTime(2024, 12, 31);
-                }
-            };
+            datePicker.SetBinding(DatePicker.SelectedDateProperty, new System.Windows.Data.Binding("SelectedDate") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
 
             stackPanel.Children.Add(datePicker);
             stackPanel.Children.Add(new Button { Content = "Show Largest Receipt", Width = 200, Margin = new Thickness(5), Command = ShowLargestReceiptCommand });
@@ -255,10 +262,10 @@ namespace Supermarket.ViewModels
 
         private void ShowSalesByUser(object parameter)
         {
-            if (SelectedCashier != null)
+            if (SelectedCashier != null && !string.IsNullOrEmpty(SelectedMonth))
             {
-                int month = SelectedMonth.Month;
-                int year = SelectedMonth.Year;
+                int month = DateTime.ParseExact(SelectedMonth, "MMMM", System.Globalization.CultureInfo.InvariantCulture).Month;
+                int year = DateTime.Now.Year; 
                 SalesByUser = new ObservableCollection<SalesReport>(reportsBLL.GetSalesByUser(SelectedCashier.UserId, month, year));
                 NotifyPropertyChanged(nameof(SalesByUser));
             }
