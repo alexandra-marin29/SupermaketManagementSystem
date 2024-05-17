@@ -16,7 +16,14 @@ namespace Supermarket.Models.BusinessLogic
 
         public void AddCategory(Category category)
         {
-            categoryDAL.AddCategory(category);
+            if (!categoryDAL.IsCategoryNameExists(category.CategoryName))
+            {
+                categoryDAL.AddCategory(category);
+            }
+            else
+            {
+                throw new Exception("Category name already exists.");
+            }
         }
 
         public void EditCategory(Category category)
@@ -43,4 +50,5 @@ namespace Supermarket.Models.BusinessLogic
             }
         }
     }
+
 }

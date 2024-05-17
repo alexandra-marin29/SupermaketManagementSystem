@@ -105,6 +105,21 @@ namespace Supermarket.Models.DataAccessLayer
 
                 return count > 0;
             }
+        
         }
+        public bool IsCategoryNameExists(string categoryName)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Categories WHERE CategoryName = @CategoryName AND IsActive = 1", con);
+                cmd.Parameters.AddWithValue("@CategoryName", categoryName);
+
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+
+                return count > 0;
+            }
+        }
+
     }
 }

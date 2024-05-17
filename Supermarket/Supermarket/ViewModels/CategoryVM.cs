@@ -74,7 +74,7 @@ namespace Supermarket.ViewModels
         {
             if (SelectedCategory != null && ValidateCategoryName(NewCategoryName))
             {
-                string originalCategoryName = SelectedCategory.CategoryName;
+                string originalCategoryName = SelectedCategory.CategoryName; // Stochează numele original
 
                 try
                 {
