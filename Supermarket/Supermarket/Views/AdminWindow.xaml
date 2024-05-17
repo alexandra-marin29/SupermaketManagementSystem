@@ -111,7 +111,6 @@
             </TabItem>
 
 
-
             <!-- Stocks Tab -->
             <TabItem Header="Stocks">
                 <Grid>
@@ -120,7 +119,7 @@
                             <Label Content="Quantity:"/>
                             <TextBox Width="100" Text="{Binding StockVM.NewQuantity, Mode=TwoWay, StringFormat=F2}"/>
                             <Label Content="Unit Of Measure:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewUnitOfMeasure, Mode=TwoWay}"/>
+                            <ComboBox Width="100" ItemsSource="{Binding StockVM.UnitOfMeasures}" SelectedItem="{Binding StockVM.NewUnitOfMeasure, Mode=TwoWay}"/>
                             <Label Content="Product:"/>
                             <ComboBox Width="150" ItemsSource="{Binding StockVM.Products}" DisplayMemberPath="ProductName" SelectedItem="{Binding StockVM.NewProduct, Mode=TwoWay}"/>
                         </WrapPanel>
@@ -153,6 +152,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
+
 
             <!-- Reports Tab -->
             <TabItem Header="Reports">

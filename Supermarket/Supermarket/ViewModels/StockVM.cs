@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using Supermarket.Models.BusinessLogic;
@@ -29,6 +30,7 @@ namespace Supermarket.ViewModels
 
         public ObservableCollection<Stock> Stocks { get; set; }
         public ObservableCollection<Product> Products { get; set; }
+        public ObservableCollection<string> UnitOfMeasures { get; set; }  // New property
 
         public ICommand AddStockCommand { get; }
         public ICommand EditStockCommand { get; }
@@ -44,6 +46,8 @@ namespace Supermarket.ViewModels
 
             Products = new ObservableCollection<Product>(productBLL.GetAllProducts());
 
+            UnitOfMeasures = new ObservableCollection<string> { "kg", "g", "l", "ml"}; 
+
             AddStockCommand = new RelayCommand<object>(AddStock);
             EditStockCommand = new RelayCommand<object>(EditStock);
             DeleteStockCommand = new RelayCommand<object>(DeleteStock);
@@ -51,16 +55,16 @@ namespace Supermarket.ViewModels
             string markupString = ConfigurationManager.AppSettings["CommercialMarkup"];
             if (decimal.TryParse(markupString, out decimal markup))
             {
-                commercialMarkup = markup / 100; 
+                commercialMarkup = markup / 100;
             }
             else
             {
-                commercialMarkup = 0.20m; 
+                commercialMarkup = 0.20m;
             }
 
             NewSupplyDate = new DateTime(2024, 1, 1);
-            NewExpirationDate = new DateTime(2024, 1, 1); 
-            IsAddingNewStock = true; 
+            NewExpirationDate = new DateTime(2024, 1, 1);
+            IsAddingNewStock = true;
         }
 
         public Stock SelectedStock
@@ -79,13 +83,13 @@ namespace Supermarket.ViewModels
                     NewPurchasePrice = selectedStock.PurchasePrice;
                     NewSalePrice = selectedStock.SalePrice;
                     NewProduct = Products.FirstOrDefault(p => p.ProductID == selectedStock.ProductID);
-                    IsAddingNewStock = false; 
-                    IsPurchasePriceReadOnly = true; 
+                    IsAddingNewStock = false;
+                    IsPurchasePriceReadOnly = true;
                 }
                 else
                 {
-                    IsAddingNewStock = true; 
-                    IsPurchasePriceReadOnly = false; 
+                    IsAddingNewStock = true;
+                    IsPurchasePriceReadOnly = false;
                 }
             }
         }
@@ -125,7 +129,15 @@ namespace Supermarket.ViewModels
             get { return newExpirationDate; }
             set
             {
-                newExpirationDate = value;
+                if (value < NewSupplyDate)
+                {
+                    MessageBox.Show("Expiration date cannot be earlier than supply date.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    newExpirationDate = NewSupplyDate;  // Reset to supply date
+                }
+                else
+                {
+                    newExpirationDate = value;
+                }
                 NotifyPropertyChanged(nameof(NewExpirationDate));
             }
         }
@@ -137,7 +149,6 @@ namespace Supermarket.ViewModels
             {
                 newPurchasePrice = value;
                 NotifyPropertyChanged(nameof(NewPurchasePrice));
-                // Automatically calculate the sale price
                 NewSalePrice = newPurchasePrice * (1 + commercialMarkup);
             }
         }
@@ -191,6 +202,12 @@ namespace Supermarket.ViewModels
         {
             if (NewProduct != null && NewPurchasePrice > 0)
             {
+                if (NewExpirationDate < NewSupplyDate)
+                {
+                    MessageBox.Show("Expiration date cannot be earlier than supply date.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 Stock newStock = new Stock
                 {
                     ProductID = NewProduct.ProductID,
@@ -215,12 +232,18 @@ namespace Supermarket.ViewModels
         {
             if (SelectedStock != null && NewSalePrice >= NewPurchasePrice)
             {
+                if (NewExpirationDate < NewSupplyDate)
+                {
+                    MessageBox.Show("Expiration date cannot be earlier than supply date.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 SelectedStock.Quantity = NewQuantity;
                 SelectedStock.UnitOfMeasure = NewUnitOfMeasure;
                 SelectedStock.SupplyDate = NewSupplyDate;
                 SelectedStock.ExpirationDate = NewExpirationDate;
                 SelectedStock.SalePrice = NewSalePrice;
-                SelectedStock.ProductName = NewProduct.ProductName; 
+                SelectedStock.ProductName = NewProduct.ProductName;
 
                 stockBLL.EditStock(SelectedStock);
                 int index = Stocks.IndexOf(SelectedStock);
@@ -252,8 +275,31 @@ namespace Supermarket.ViewModels
             NewPurchasePrice = 0;
             NewSalePrice = 0;
             NewProduct = null;
-            IsAddingNewStock = true; 
-            IsPurchasePriceReadOnly = false; 
+            IsAddingNewStock = true;
+            IsPurchasePriceReadOnly = false;
+        }
+
+        private bool ValidateProductInputs(string productName, string barcode, string categoryName)
+        {
+            if (string.IsNullOrWhiteSpace(productName) || !Regex.IsMatch(productName, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Product name must be non-empty and contain only letters.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(barcode) || !Regex.IsMatch(barcode, @"^[0-9]+$"))
+            {
+                MessageBox.Show("Barcode must be non-empty and contain only digits.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(categoryName) || !Regex.IsMatch(categoryName, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Category name must be non-empty and contain only letters.");
+                return false;
+            }
+
+            return true;
         }
     }
 }
