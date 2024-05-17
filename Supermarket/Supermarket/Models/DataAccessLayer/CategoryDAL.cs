@@ -93,11 +93,11 @@ namespace Supermarket.Models.DataAccessLayer
             }
         }
 
-        public bool HasProducts(int categoryId)
+        public bool HasActiveProducts(int categoryId)
         {
             using (SqlConnection con = DALHelper.Connection)
             {
-                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE CategoryID = @CategoryId", con);
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE CategoryID = @CategoryId AND IsActive = 1", con);
                 cmd.Parameters.AddWithValue("@CategoryId", categoryId);
 
                 con.Open();
@@ -105,8 +105,9 @@ namespace Supermarket.Models.DataAccessLayer
 
                 return count > 0;
             }
-        
         }
+
+
         public bool IsCategoryNameExists(string categoryName)
         {
             using (SqlConnection con = DALHelper.Connection)

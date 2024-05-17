@@ -28,27 +28,19 @@ namespace Supermarket.Models.BusinessLogic
 
         public void EditCategory(Category category)
         {
-            if (!categoryDAL.HasProducts(category.CategoryID))
-            {
-                categoryDAL.EditCategory(category);
-            }
-            else
-            {
-                throw new Exception("Cannot edit category with existing products.");
-            }
+            categoryDAL.EditCategory(category);
         }
 
         public void DeleteCategory(int categoryId)
         {
-            if (!categoryDAL.HasProducts(categoryId))
+            if (!categoryDAL.HasActiveProducts(categoryId))
             {
                 categoryDAL.DeleteCategory(categoryId);
             }
             else
             {
-                throw new Exception("Cannot delete category with existing products.");
+                throw new Exception("Cannot delete category with existing active products.");
             }
         }
     }
-
 }
