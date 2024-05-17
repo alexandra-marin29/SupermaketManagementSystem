@@ -66,7 +66,7 @@ namespace Supermarket.ViewModels
 
         private void AddManufacturer(object parameter)
         {
-            if (!string.IsNullOrEmpty(NewManufacturerName) && !string.IsNullOrEmpty(NewCountryOfOrigin))
+            if (ValidateManufacturerInputs(NewManufacturerName, NewCountryOfOrigin))
             {
                 try
                 {
@@ -90,9 +90,9 @@ namespace Supermarket.ViewModels
 
         private void EditManufacturer(object parameter)
         {
-            if (SelectedManufacturer != null && !string.IsNullOrEmpty(NewManufacturerName) && !string.IsNullOrEmpty(NewCountryOfOrigin))
+            if (SelectedManufacturer != null && ValidateManufacturerInputs(NewManufacturerName, NewCountryOfOrigin))
             {
-                string originalManufacturerName = SelectedManufacturer.ManufacturerName; 
+                string originalManufacturerName = SelectedManufacturer.ManufacturerName;
                 string originalCountryOfOrigin = SelectedManufacturer.CountryOfOrigin; 
 
                 try
@@ -146,6 +146,23 @@ namespace Supermarket.ViewModels
                     MessageBox.Show(ex.Message);
                 }
             }
+        }
+
+        private bool ValidateManufacturerInputs(string manufacturerName, string countryOfOrigin)
+        {
+            if (string.IsNullOrWhiteSpace(manufacturerName) || !Regex.IsMatch(manufacturerName, @"^[a-zA-Z0-9]+$"))
+            {
+                MessageBox.Show("Manufacturer name must be non-empty and contain only letters and digits.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(countryOfOrigin) || !Regex.IsMatch(countryOfOrigin, @"^[a-zA-Z]+$"))
+            {
+                MessageBox.Show("Country of origin must be non-empty and contain only letters.");
+                return false;
+            }
+
+            return true;
         }
     }
 }
