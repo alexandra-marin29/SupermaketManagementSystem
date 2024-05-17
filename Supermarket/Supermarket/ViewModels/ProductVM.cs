@@ -203,6 +203,8 @@ namespace Supermarket.ViewModels
                 SelectedProduct.Barcode = NewBarcode;
                 SelectedProduct.CategoryID = NewCategory.CategoryID;
                 SelectedProduct.ManufacturerID = NewManufacturer.ManufacturerID;
+                SelectedProduct.CategoryName = NewCategory.CategoryName;  // Set the CategoryName
+                SelectedProduct.ManufacturerName = NewManufacturer.ManufacturerName;  // Set the ManufacturerName
 
                 productBLL.EditProduct(SelectedProduct);
                 int index = Products.IndexOf(SelectedProduct);
@@ -215,7 +217,9 @@ namespace Supermarket.ViewModels
                         Barcode = SelectedProduct.Barcode,
                         CategoryID = SelectedProduct.CategoryID,
                         ManufacturerID = SelectedProduct.ManufacturerID,
-                        IsActive = SelectedProduct.IsActive
+                        IsActive = SelectedProduct.IsActive,
+                        CategoryName = SelectedProduct.CategoryName,
+                        ManufacturerName = SelectedProduct.ManufacturerName
                     };
                 }
                 ClearInputs();

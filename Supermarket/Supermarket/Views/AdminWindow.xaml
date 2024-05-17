@@ -78,7 +78,6 @@
             </TabItem>
 
             <!-- Products Tab -->
-            <!-- Products Tab -->
             <TabItem Header="Products">
                 <Grid>
                     <StackPanel>
