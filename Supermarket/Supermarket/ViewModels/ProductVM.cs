@@ -149,17 +149,8 @@ namespace Supermarket.ViewModels
 
                 if (NewManufacturer == null)
                 {
-                    var existingManufacturer = Manufacturers.FirstOrDefault(m => m.ManufacturerName == NewManufacturerName);
-                    if (existingManufacturer == null)
-                    {
-                        NewManufacturer = new Manufacturer { ManufacturerName = NewManufacturerName, IsActive = true };
-                        manufacturerBLL.AddManufacturer(NewManufacturer);
-                        Manufacturers.Add(NewManufacturer);
-                    }
-                    else
-                    {
-                        NewManufacturer = existingManufacturer;
-                    }
+                    MessageBox.Show("Please select an existing manufacturer.");
+                    return;
                 }
 
                 Product newProduct = new Product
@@ -168,8 +159,8 @@ namespace Supermarket.ViewModels
                     Barcode = NewBarcode,
                     CategoryID = NewCategory.CategoryID,
                     ManufacturerID = NewManufacturer.ManufacturerID,
-                    CategoryName = NewCategory.CategoryName,  // Set CategoryName
-                    ManufacturerName = NewManufacturer.ManufacturerName,  // Set ManufacturerName
+                    CategoryName = NewCategory.CategoryName,
+                    ManufacturerName = NewManufacturer.ManufacturerName,
                     IsActive = true
                 };
 
@@ -178,6 +169,7 @@ namespace Supermarket.ViewModels
                 ClearInputs();
             }
         }
+
 
         private void EditProduct(object parameter)
         {

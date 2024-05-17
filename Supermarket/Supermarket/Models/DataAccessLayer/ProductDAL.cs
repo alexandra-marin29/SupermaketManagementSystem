@@ -68,24 +68,21 @@ namespace Supermarket.Models.DataAccessLayer
             return product;
         }
 
-        public void AddProduct(Product product)
+        public void AddProduct(Product product, SqlConnection con, SqlTransaction transaction)
         {
-            using (SqlConnection con = DALHelper.Connection)
+            SqlCommand cmd = new SqlCommand("AddProduct", con, transaction)
             {
-                SqlCommand cmd = new SqlCommand("AddProduct", con)
-                {
-                    CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
-                cmd.Parameters.AddWithValue("@Barcode", product.Barcode);
-                cmd.Parameters.AddWithValue("@CategoryID", (object)product.CategoryID ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@ManufacturerID", (object)product.ManufacturerID ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@IsActive", 1);
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@ProductName", product.ProductName);
+            cmd.Parameters.AddWithValue("@Barcode", product.Barcode);
+            cmd.Parameters.AddWithValue("@CategoryID", (object)product.CategoryID ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@ManufacturerID", (object)product.ManufacturerID ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@IsActive", 1);
 
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
+            cmd.ExecuteNonQuery();
         }
+
 
         public void EditProduct(Product product)
         {
