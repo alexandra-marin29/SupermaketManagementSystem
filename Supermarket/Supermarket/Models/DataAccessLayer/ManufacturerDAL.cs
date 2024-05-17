@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Supermarket.Models.EntityLayer;
@@ -77,8 +78,31 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@ManufacturerId", manufacturerId);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(ex.Message);
+                }
             }
         }
+
+
+        public bool HasProducts(int manufacturerId)
+        {
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Products WHERE ManufacturerID = @ManufacturerId", con);
+                cmd.Parameters.AddWithValue("@ManufacturerId", manufacturerId);
+
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+
+                return count > 0;
+            }
+        }
+
     }
 }

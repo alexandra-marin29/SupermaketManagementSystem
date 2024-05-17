@@ -64,8 +64,8 @@
                             <TextBox Width="200" Text="{Binding ManufacturerVM.NewCountryOfOrigin, Mode=TwoWay}"/>
                             <Button Content="Add Manufacturer" Width="100" Margin="5" Command="{Binding ManufacturerVM.AddManufacturerCommand}"/>
                         </WrapPanel>
-                        <Button Content="Edit Manufacturer" Width="100" Margin="5" Command="{Binding ManufacturerVM.EditManufacturerCommand}"/>
-                        <Button Content="Delete Manufacturer" Width="100" Margin="5" Command="{Binding ManufacturerVM.DeleteManufacturerCommand}"/>
+                        <Button Content="Edit Manufacturer" Width="110" Margin="5" Command="{Binding ManufacturerVM.EditManufacturerCommand}"/>
+                        <Button Content="Delete Manufacturer" Width="120" Margin="5" Command="{Binding ManufacturerVM.DeleteManufacturerCommand}"/>
                         <DataGrid x:Name="ManufacturersDataGrid" AutoGenerateColumns="False" CanUserAddRows="False" Height="400" ItemsSource="{Binding ManufacturerVM.Manufacturers}" SelectedItem="{Binding ManufacturerVM.SelectedManufacturer}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Manufacturer Name" Binding="{Binding ManufacturerName}" />

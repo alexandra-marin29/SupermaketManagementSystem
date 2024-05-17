@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Supermarket.Models.DataAccessLayer;
 using Supermarket.Models.EntityLayer;
 
@@ -20,12 +21,26 @@ namespace Supermarket.Models.BusinessLogic
 
         public void EditManufacturer(Manufacturer manufacturer)
         {
-            manufacturerDAL.EditManufacturer(manufacturer);
+            if (!manufacturerDAL.HasProducts(manufacturer.ManufacturerID))
+            {
+                manufacturerDAL.EditManufacturer(manufacturer);
+            }
+            else
+            {
+                throw new Exception("Cannot edit manufacturer with existing products.");
+            }
         }
 
         public void DeleteManufacturer(int manufacturerId)
         {
-            manufacturerDAL.DeleteManufacturer(manufacturerId);
+            try
+            {
+                manufacturerDAL.DeleteManufacturer(manufacturerId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

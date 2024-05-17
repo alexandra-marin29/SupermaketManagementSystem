@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Input;
 using Supermarket.Models.BusinessLogic;
 using Supermarket.Models.EntityLayer;
@@ -65,16 +68,23 @@ namespace Supermarket.ViewModels
         {
             if (!string.IsNullOrEmpty(NewManufacturerName) && !string.IsNullOrEmpty(NewCountryOfOrigin))
             {
-                Manufacturer newManufacturer = new Manufacturer
+                try
                 {
-                    ManufacturerName = NewManufacturerName,
-                    CountryOfOrigin = NewCountryOfOrigin,
-                    IsActive = true
-                };
-                manufacturerBLL.AddManufacturer(newManufacturer);
-                Manufacturers.Add(newManufacturer);
-                NewManufacturerName = string.Empty;
-                NewCountryOfOrigin = string.Empty;
+                    Manufacturer newManufacturer = new Manufacturer
+                    {
+                        ManufacturerName = NewManufacturerName,
+                        CountryOfOrigin = NewCountryOfOrigin,
+                        IsActive = true
+                    };
+                    manufacturerBLL.AddManufacturer(newManufacturer);
+                    Manufacturers.Add(newManufacturer);
+                    NewManufacturerName = string.Empty;
+                    NewCountryOfOrigin = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
@@ -82,23 +92,40 @@ namespace Supermarket.ViewModels
         {
             if (SelectedManufacturer != null && !string.IsNullOrEmpty(NewManufacturerName) && !string.IsNullOrEmpty(NewCountryOfOrigin))
             {
-                SelectedManufacturer.ManufacturerName = NewManufacturerName;
-                SelectedManufacturer.CountryOfOrigin = NewCountryOfOrigin;
-                manufacturerBLL.EditManufacturer(SelectedManufacturer);
-                int index = Manufacturers.IndexOf(SelectedManufacturer);
-                if (index >= 0)
+                string originalManufacturerName = SelectedManufacturer.ManufacturerName; 
+                string originalCountryOfOrigin = SelectedManufacturer.CountryOfOrigin; 
+
+                try
                 {
-                    Manufacturers[index] = new Manufacturer
+                    SelectedManufacturer.ManufacturerName = NewManufacturerName;
+                    SelectedManufacturer.CountryOfOrigin = NewCountryOfOrigin;
+                    manufacturerBLL.EditManufacturer(SelectedManufacturer);
+
+                    int index = Manufacturers.IndexOf(SelectedManufacturer);
+                    if (index >= 0)
                     {
-                        ManufacturerID = SelectedManufacturer.ManufacturerID,
-                        ManufacturerName = SelectedManufacturer.ManufacturerName,
-                        CountryOfOrigin = SelectedManufacturer.CountryOfOrigin,
-                        IsActive = SelectedManufacturer.IsActive
-                    };
+                        Manufacturers[index] = new Manufacturer
+                        {
+                            ManufacturerID = SelectedManufacturer.ManufacturerID,
+                            ManufacturerName = SelectedManufacturer.ManufacturerName,
+                            CountryOfOrigin = SelectedManufacturer.CountryOfOrigin,
+                            IsActive = SelectedManufacturer.IsActive
+                        };
+                    }
+
+                    NewManufacturerName = string.Empty;
+                    NewCountryOfOrigin = string.Empty;
+                    SelectedManufacturer = null;
                 }
-                NewManufacturerName = string.Empty;
-                NewCountryOfOrigin = string.Empty;
-                SelectedManufacturer = null;
+                catch (Exception ex)
+                {
+                    if (SelectedManufacturer != null)
+                    {
+                        SelectedManufacturer.ManufacturerName = originalManufacturerName;
+                        SelectedManufacturer.CountryOfOrigin = originalCountryOfOrigin;
+                    }
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
@@ -106,11 +133,18 @@ namespace Supermarket.ViewModels
         {
             if (SelectedManufacturer != null)
             {
-                manufacturerBLL.DeleteManufacturer(SelectedManufacturer.ManufacturerID);
-                Manufacturers.Remove(SelectedManufacturer);
-                SelectedManufacturer = null;
-                NewManufacturerName = string.Empty;
-                NewCountryOfOrigin = string.Empty;
+                try
+                {
+                    manufacturerBLL.DeleteManufacturer(SelectedManufacturer.ManufacturerID);
+                    Manufacturers.Remove(SelectedManufacturer);
+                    SelectedManufacturer = null;
+                    NewManufacturerName = string.Empty;
+                    NewCountryOfOrigin = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }
