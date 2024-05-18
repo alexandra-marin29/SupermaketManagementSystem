@@ -106,11 +106,14 @@ namespace Supermarket.Models.DataAccessLayer
                 cmd.Parameters.AddWithValue("@SupplyDate", stock.SupplyDate);
                 cmd.Parameters.AddWithValue("@ExpirationDate", stock.ExpirationDate);
                 cmd.Parameters.AddWithValue("@SalePrice", stock.SalePrice);
+                cmd.Parameters.AddWithValue("@IsActive", (object)stock.IsActive ?? DBNull.Value);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
             }
         }
+
+
 
         public void DeleteStock(int stockID)
         {

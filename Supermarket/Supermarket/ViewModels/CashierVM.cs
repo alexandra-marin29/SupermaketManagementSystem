@@ -46,6 +46,7 @@ namespace Supermarket.ViewModels
             SearchProductsCommand = new RelayCommand<object>(SearchProducts);
             AddToReceiptCommand = new RelayCommand<object>(AddToReceipt);
             FinalizeReceiptCommand = new RelayCommand<object>(FinalizeReceipt);
+            RemoveFromReceiptCommand = new RelayCommand<ReceiptDetail>(RemoveFromReceipt);
         }
 
         public ObservableCollection<Product> Products
@@ -201,6 +202,7 @@ namespace Supermarket.ViewModels
         public ICommand SearchProductsCommand { get; }
         public ICommand AddToReceiptCommand { get; }
         public ICommand FinalizeReceiptCommand { get; }
+        public ICommand RemoveFromReceiptCommand { get; }
 
         private void SearchProducts(object parameter)
         {
@@ -216,38 +218,74 @@ namespace Supermarket.ViewModels
         {
             if (SelectedProduct != null && Quantity > 0)
             {
-                var stock = stockBLL.GetStocksByProductId(SelectedProduct.ProductID)
-                    .FirstOrDefault(s => s.ExpirationDate > DateTime.Now && s.Quantity >= Quantity);
-
-                if (stock != null)
+                var existingReceiptDetail = ReceiptDetails.FirstOrDefault(rd => rd.ProductID == SelectedProduct.ProductID);
+                if (existingReceiptDetail != null)
                 {
-                    decimal salePrice = stock.SalePrice;
-                    decimal subtotal = salePrice * Quantity;
-
-                    var receiptDetail = new ReceiptDetail
-                    {
-                        ProductID = SelectedProduct.ProductID,
-                        ProductName = SelectedProduct.ProductName,
-                        Quantity = Quantity,
-                        Subtotal = subtotal
-                    };
-
-                    ReceiptDetails.Add(receiptDetail);
-                    TotalAmount += subtotal;
-
-                    stock.Quantity -= Quantity;
-                    if (stock.Quantity == 0)
-                    {
-                        stock.IsActive = false;
-                    }
-                    stockBLL.EditStock(stock);
-
-                    ClearFields();
+                    existingReceiptDetail.Quantity += Quantity;
+                    existingReceiptDetail.Subtotal += existingReceiptDetail.Quantity * existingReceiptDetail.Subtotal / (existingReceiptDetail.Quantity - Quantity);
                 }
                 else
                 {
-                    MessageBox.Show("Insufficient stock or expired product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    var stock = stockBLL.GetStocksByProductId(SelectedProduct.ProductID)
+                        .FirstOrDefault(s => s.ExpirationDate > DateTime.Now && s.Quantity >= Quantity);
+
+                    if (stock != null)
+                    {
+                        decimal salePrice = stock.SalePrice;
+                        decimal subtotal = salePrice * Quantity;
+
+                        var receiptDetail = new ReceiptDetail
+                        {
+                            ProductID = SelectedProduct.ProductID,
+                            ProductName = SelectedProduct.ProductName,
+                            Quantity = Quantity,
+                            Subtotal = subtotal
+                        };
+
+                        ReceiptDetails.Add(receiptDetail);
+                        stock.Quantity -= Quantity;
+                        if (stock.Quantity == 0)
+                        {
+                            stock.IsActive = null; // Set to null when quantity is 0
+                        }
+                        stockBLL.EditStock(stock);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Insufficient stock or expired product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
+
+                TotalAmount = ReceiptDetails.Sum(rd => rd.Subtotal);
+                ClearFields();
+            }
+        }
+
+        private void RemoveFromReceipt(object parameter)
+        {
+            if (parameter is ReceiptDetail receiptDetail)
+            {
+                ReceiptDetails.Remove(receiptDetail);
+
+                var stock = stockBLL.GetStocksByProductId(receiptDetail.ProductID)
+                    .FirstOrDefault(s => s.ExpirationDate > DateTime.Now);
+
+                if (stock != null)
+                {
+                    stock.Quantity += receiptDetail.Quantity;
+                    if (stock.Quantity == 0)
+                    {
+                        stock.IsActive = null; // Set to null when quantity is 0
+                    }
+                    else
+                    {
+                        stock.IsActive = true;
+                    }
+                    stockBLL.EditStock(stock);
+                }
+
+                TotalAmount = ReceiptDetails.Sum(rd => rd.Subtotal);
+                ClearFields();
             }
         }
 

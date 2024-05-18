@@ -59,11 +59,18 @@
                         <Button Content="Add to Receipt" Width="150" Command="{Binding AddToReceiptCommand}" Margin="10,0,0,0"/>
                     </WrapPanel>
                     <ScrollViewer Height="120">
-                        <DataGrid ItemsSource="{Binding ReceiptDetails}" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid ItemsSource="{Binding ReceiptDetails}" SelectedItem="{Binding SelectedReceiptDetail}" AutoGenerateColumns="False" CanUserAddRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="*" />
                                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*" />
                                 <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal}" Width="*" />
+                                <DataGridTemplateColumn Header="Actions" Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Delete" Command="{Binding DataContext.RemoveFromReceiptCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </ScrollViewer>
