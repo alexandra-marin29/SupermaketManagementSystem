@@ -18,7 +18,7 @@
                 <StackPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Product Name:" Width="120"/>
-                        <ComboBox Width="150" IsEditable="True" Text="{Binding ProductName}" ItemsSource="{Binding ProductNames}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding SelectedProductName, Mode=TwoWay}" ItemsSource="{Binding ProductNames}" />
                         <Label Content="Barcode:" Width="120" Margin="10,0,0,0"/>
                         <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode}" ItemsSource="{Binding FilteredBarcodes}" />
                     </WrapPanel>

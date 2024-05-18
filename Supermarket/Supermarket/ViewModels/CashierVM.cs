@@ -47,6 +47,10 @@ namespace Supermarket.ViewModels
             Manufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers());
             Categories = new ObservableCollection<Category>(categoryBLL.GetAllCategories());
 
+            FilteredBarcodes = new ObservableCollection<string>(Barcodes);
+            FilteredManufacturers = new ObservableCollection<Manufacturer>(Manufacturers);
+            FilteredCategories = new ObservableCollection<Category>(Categories);
+
             SearchProductsCommand = new RelayCommand<object>(SearchProducts);
             AddToReceiptCommand = new RelayCommand<object>(AddToReceipt);
             FinalizeReceiptCommand = new RelayCommand<object>(FinalizeReceipt);
@@ -150,9 +154,29 @@ namespace Supermarket.ViewModels
             {
                 selectedProduct = value;
                 NotifyPropertyChanged(nameof(SelectedProduct));
+                if (selectedProduct != null)
+                {
+                    SelectedProductName = selectedProduct.ProductName;
+                }
                 UpdateFilteredLists();
             }
         }
+
+
+        private string selectedProductName;
+
+        public string SelectedProductName
+        {
+            get { return selectedProductName; }
+            set
+            {
+                selectedProductName = value;
+                NotifyPropertyChanged(nameof(SelectedProductName));
+                UpdateFilteredLists();
+            }
+        }
+
+
 
         public ReceiptDetail SelectedReceiptDetail
         {
@@ -241,18 +265,24 @@ namespace Supermarket.ViewModels
 
         private void UpdateFilteredLists()
         {
-            if (SelectedProduct != null)
+            if (!string.IsNullOrEmpty(SelectedProductName))
             {
-                FilteredBarcodes = new ObservableCollection<string>(productBLL.GetProductsInStock()
-                    .Where(p => p.ProductName == SelectedProduct.ProductName)
-                    .Select(p => p.Barcode)
-                    .Distinct());
+                var selectedProduct = productBLL.GetProductsInStock()
+                    .FirstOrDefault(p => p.ProductName == SelectedProductName);
 
-                FilteredManufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers()
-                    .Where(m => m.ManufacturerID == SelectedProduct.ManufacturerID));
+                if (selectedProduct != null)
+                {
+                    FilteredBarcodes = new ObservableCollection<string>(productBLL.GetProductsInStock()
+                        .Where(p => p.ProductName == selectedProduct.ProductName)
+                        .Select(p => p.Barcode)
+                        .Distinct());
 
-                FilteredCategories = new ObservableCollection<Category>(categoryBLL.GetAllCategories()
-                    .Where(c => c.CategoryID == SelectedProduct.CategoryID));
+                    FilteredManufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers()
+                        .Where(m => m.ManufacturerID == selectedProduct.ManufacturerID));
+
+                    FilteredCategories = new ObservableCollection<Category>(categoryBLL.GetAllCategories()
+                        .Where(c => c.CategoryID == selectedProduct.CategoryID));
+                }
             }
             else
             {
@@ -261,6 +291,8 @@ namespace Supermarket.ViewModels
                 FilteredCategories = new ObservableCollection<Category>(Categories);
             }
         }
+
+
 
         private void SearchProducts(object parameter)
         {
