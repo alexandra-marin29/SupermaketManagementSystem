@@ -24,6 +24,10 @@ namespace Supermarket.ViewModels
         private ObservableCollection<string> barcodes;
         private ObservableCollection<Manufacturer> manufacturers;
         private ObservableCollection<Category> categories;
+        private ObservableCollection<string> filteredBarcodes;
+        private ObservableCollection<Manufacturer> filteredManufacturers;
+        private ObservableCollection<Category> filteredCategories;
+
         private Product selectedProduct;
         private ReceiptDetail selectedReceiptDetail;
         private decimal quantity;
@@ -89,6 +93,16 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public ObservableCollection<string> FilteredBarcodes
+        {
+            get { return filteredBarcodes; }
+            set
+            {
+                filteredBarcodes = value;
+                NotifyPropertyChanged(nameof(FilteredBarcodes));
+            }
+        }
+
         public ObservableCollection<Manufacturer> Manufacturers
         {
             get { return manufacturers; }
@@ -96,6 +110,16 @@ namespace Supermarket.ViewModels
             {
                 manufacturers = value;
                 NotifyPropertyChanged(nameof(Manufacturers));
+            }
+        }
+
+        public ObservableCollection<Manufacturer> FilteredManufacturers
+        {
+            get { return filteredManufacturers; }
+            set
+            {
+                filteredManufacturers = value;
+                NotifyPropertyChanged(nameof(FilteredManufacturers));
             }
         }
 
@@ -109,6 +133,16 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public ObservableCollection<Category> FilteredCategories
+        {
+            get { return filteredCategories; }
+            set
+            {
+                filteredCategories = value;
+                NotifyPropertyChanged(nameof(FilteredCategories));
+            }
+        }
+
         public Product SelectedProduct
         {
             get { return selectedProduct; }
@@ -116,6 +150,7 @@ namespace Supermarket.ViewModels
             {
                 selectedProduct = value;
                 NotifyPropertyChanged(nameof(SelectedProduct));
+                UpdateFilteredLists();
             }
         }
 
@@ -204,6 +239,29 @@ namespace Supermarket.ViewModels
         public ICommand FinalizeReceiptCommand { get; }
         public ICommand RemoveFromReceiptCommand { get; }
 
+        private void UpdateFilteredLists()
+        {
+            if (SelectedProduct != null)
+            {
+                FilteredBarcodes = new ObservableCollection<string>(productBLL.GetProductsInStock()
+                    .Where(p => p.ProductName == SelectedProduct.ProductName)
+                    .Select(p => p.Barcode)
+                    .Distinct());
+
+                FilteredManufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers()
+                    .Where(m => m.ManufacturerID == SelectedProduct.ManufacturerID));
+
+                FilteredCategories = new ObservableCollection<Category>(categoryBLL.GetAllCategories()
+                    .Where(c => c.CategoryID == SelectedProduct.CategoryID));
+            }
+            else
+            {
+                FilteredBarcodes = new ObservableCollection<string>(Barcodes);
+                FilteredManufacturers = new ObservableCollection<Manufacturer>(Manufacturers);
+                FilteredCategories = new ObservableCollection<Category>(Categories);
+            }
+        }
+
         private void SearchProducts(object parameter)
         {
             Products.Clear();
@@ -227,33 +285,42 @@ namespace Supermarket.ViewModels
                 }
                 else
                 {
-                    var stock = stockBLL.GetStocksByProductId(SelectedProduct.ProductID)
-                        .FirstOrDefault(s => s.ExpirationDate > DateTime.Now && s.Quantity >= Quantity);
+                    var stocks = stockBLL.GetStocksByProductId(SelectedProduct.ProductID)
+                        .Where(s => s.ExpirationDate > DateTime.Now && s.Quantity > 0)
+                        .OrderBy(s => s.SupplyDate)
+                        .ToList();
 
-                    if (stock != null)
+                    decimal remainingQuantity = Quantity;
+                    foreach (var stock in stocks)
                     {
-                        decimal salePrice = stock.SalePrice;
-                        decimal subtotal = salePrice * Quantity;
+                        if (remainingQuantity <= 0)
+                            break;
+
+                        decimal deductedQuantity = Math.Min(remainingQuantity, stock.Quantity);
+                        remainingQuantity -= deductedQuantity;
+                        stock.Quantity -= deductedQuantity;
+
+                        if (stock.Quantity == 0)
+                        {
+                            stock.IsActive = false; // Set to inactive when quantity is 0
+                        }
+
+                        stockBLL.EditStock(stock);
 
                         var receiptDetail = new ReceiptDetail
                         {
                             ProductID = SelectedProduct.ProductID,
                             ProductName = SelectedProduct.ProductName,
-                            Quantity = Quantity,
-                            Subtotal = subtotal
+                            Quantity = deductedQuantity,
+                            Subtotal = deductedQuantity * stock.SalePrice
                         };
 
                         ReceiptDetails.Add(receiptDetail);
-                        stock.Quantity -= Quantity;
-                        if (stock.Quantity == 0)
-                        {
-                            stock.IsActive = null; // Set to null when quantity is 0
-                        }
-                        stockBLL.EditStock(stock);
                     }
-                    else
+
+                    if (remainingQuantity > 0)
                     {
-                        MessageBox.Show("Insufficient stock or expired product.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Insufficient stock.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
 
@@ -261,6 +328,7 @@ namespace Supermarket.ViewModels
                 ClearFields();
             }
         }
+
 
         private void RemoveFromReceipt(object parameter)
         {
@@ -277,7 +345,7 @@ namespace Supermarket.ViewModels
                     stock.Quantity += receiptDetail.Quantity;
                     if (stock.Quantity == 0)
                     {
-                        stock.IsActive = null; // Set to null when quantity is 0
+                        stock.IsActive = false; // Set to inactive when quantity is 0
                     }
                     else
                     {

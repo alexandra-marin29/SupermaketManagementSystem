@@ -20,17 +20,17 @@
                         <Label Content="Product Name:" Width="120"/>
                         <ComboBox Width="150" IsEditable="True" Text="{Binding ProductName}" ItemsSource="{Binding ProductNames}" />
                         <Label Content="Barcode:" Width="120" Margin="10,0,0,0"/>
-                        <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode}" ItemsSource="{Binding Barcodes}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode}" ItemsSource="{Binding FilteredBarcodes}" />
                     </WrapPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Expiration Date:" Width="120"/>
                         <DatePicker SelectedDate="{Binding ExpirationDate}" Width="150"/>
                         <Label Content="Manufacturer:" Width="120" Margin="10,0,0,0"/>
-                        <ComboBox Width="150" ItemsSource="{Binding Manufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}" />
+                        <ComboBox Width="150" ItemsSource="{Binding FilteredManufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}" />
                     </WrapPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Category:" Width="120"/>
-                        <ComboBox Width="150" ItemsSource="{Binding Categories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}" />
+                        <ComboBox Width="150" ItemsSource="{Binding FilteredCategories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}" />
                         <Button Content="Search" Width="100" Command="{Binding SearchProductsCommand}" Margin="10,0,0,0"/>
                     </WrapPanel>
                 </StackPanel>
