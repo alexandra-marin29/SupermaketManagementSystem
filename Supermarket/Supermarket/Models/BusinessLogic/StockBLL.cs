@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Supermarket.Models.DataAccessLayer;
 using Supermarket.Models.EntityLayer;
 
@@ -31,5 +32,19 @@ namespace Supermarket.Models.BusinessLogic
         {
             return stockDAL.GetStocksByProductId(productId);
         }
+
+        public void UpdateStockStatus()
+        {
+            var stocks = stockDAL.GetAllStocks();
+            foreach (var stock in stocks)
+            {
+                if (stock.ExpirationDate <= DateTime.Now)
+                {
+                    stock.IsActive = false;
+                    stockDAL.EditStock(stock);
+                }
+            }
+        }
+
     }
 }

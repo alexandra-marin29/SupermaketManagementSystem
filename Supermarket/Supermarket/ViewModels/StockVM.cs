@@ -27,6 +27,13 @@ namespace Supermarket.ViewModels
         private decimal commercialMarkup;
         private bool isAddingNewStock;
         private bool isPurchasePriceReadOnly;
+        public bool IsQuantityEditable { get; set; } = true;
+        public bool IsUnitOfMeasureEditable { get; set; } = true;
+        public bool IsSupplyDateEditable { get; set; } = true;
+        public bool IsExpirationDateEditable { get; set; } = true;
+        public bool IsPurchasePriceEditable { get; set; } = true;
+        public bool IsSalePriceEditable { get; set; } = true;
+
 
         public ObservableCollection<Stock> Stocks { get; set; }
         public ObservableCollection<Product> Products { get; set; }
@@ -45,8 +52,7 @@ namespace Supermarket.ViewModels
             }
 
             Products = new ObservableCollection<Product>(productBLL.GetAllProducts());
-
-            UnitOfMeasures = new ObservableCollection<string> { "kg", "g", "l", "ml"}; 
+            UnitOfMeasures = new ObservableCollection<string> { "kg", "g", "l", "ml" };
 
             AddStockCommand = new RelayCommand<object>(AddStock);
             EditStockCommand = new RelayCommand<object>(EditStock);
@@ -65,7 +71,40 @@ namespace Supermarket.ViewModels
             NewSupplyDate = new DateTime(2024, 1, 1);
             NewExpirationDate = new DateTime(2024, 1, 1);
             IsAddingNewStock = true;
+
+            IsQuantityEditable = true;
+            IsUnitOfMeasureEditable = true;
+            IsSupplyDateEditable = true;
+            IsExpirationDateEditable = true;
+            IsPurchasePriceEditable = true;
+            IsSalePriceEditable = true;
         }
+
+        private void ClearFields()
+        {
+            NewQuantity = 0;
+            NewUnitOfMeasure = string.Empty;
+            NewSupplyDate = new DateTime(2024, 1, 1);
+            NewExpirationDate = new DateTime(2024, 1, 1);
+            NewPurchasePrice = 0;
+            NewSalePrice = 0;
+            NewProduct = null;
+
+            IsQuantityEditable = true;
+            IsUnitOfMeasureEditable = true;
+            IsSupplyDateEditable = true;
+            IsExpirationDateEditable = true;
+            IsPurchasePriceEditable = true;
+            IsSalePriceEditable = true;
+
+            NotifyPropertyChanged(nameof(IsQuantityEditable));
+            NotifyPropertyChanged(nameof(IsUnitOfMeasureEditable));
+            NotifyPropertyChanged(nameof(IsSupplyDateEditable));
+            NotifyPropertyChanged(nameof(IsExpirationDateEditable));
+            NotifyPropertyChanged(nameof(IsPurchasePriceEditable));
+            NotifyPropertyChanged(nameof(IsSalePriceEditable));
+        }
+
 
         public Stock SelectedStock
         {
@@ -83,16 +122,34 @@ namespace Supermarket.ViewModels
                     NewPurchasePrice = selectedStock.PurchasePrice;
                     NewSalePrice = selectedStock.SalePrice;
                     NewProduct = Products.FirstOrDefault(p => p.ProductID == selectedStock.ProductID);
-                    IsAddingNewStock = false;
-                    IsPurchasePriceReadOnly = true;
+
+                    IsQuantityEditable = false;
+                    IsUnitOfMeasureEditable = false;
+                    IsSupplyDateEditable = false;
+                    IsExpirationDateEditable = false;
+                    IsPurchasePriceEditable = false;
+                    IsSalePriceEditable = true;
                 }
                 else
                 {
-                    IsAddingNewStock = true;
-                    IsPurchasePriceReadOnly = false;
+                    IsQuantityEditable = true;
+                    IsUnitOfMeasureEditable = true;
+                    IsSupplyDateEditable = true;
+                    IsExpirationDateEditable = true;
+                    IsPurchasePriceEditable = true;
+                    IsSalePriceEditable = true;
                 }
+
+                NotifyPropertyChanged(nameof(IsQuantityEditable));
+                NotifyPropertyChanged(nameof(IsUnitOfMeasureEditable));
+                NotifyPropertyChanged(nameof(IsSupplyDateEditable));
+                NotifyPropertyChanged(nameof(IsExpirationDateEditable));
+                NotifyPropertyChanged(nameof(IsPurchasePriceEditable));
+                NotifyPropertyChanged(nameof(IsSalePriceEditable));
             }
         }
+
+
 
         public decimal NewQuantity
         {
@@ -266,18 +323,7 @@ namespace Supermarket.ViewModels
             }
         }
 
-        private void ClearFields()
-        {
-            NewQuantity = 0;
-            NewUnitOfMeasure = string.Empty;
-            NewSupplyDate = new DateTime(2024, 1, 1);
-            NewExpirationDate = new DateTime(2024, 1, 1);
-            NewPurchasePrice = 0;
-            NewSalePrice = 0;
-            NewProduct = null;
-            IsAddingNewStock = true;
-            IsPurchasePriceReadOnly = false;
-        }
+        
 
         private bool ValidateProductInputs(string productName, string barcode, string categoryName)
         {

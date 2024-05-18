@@ -118,23 +118,23 @@
                     <StackPanel>
                         <WrapPanel Margin="10">
                             <Label Content="Quantity:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewQuantity, Mode=TwoWay, StringFormat=F2}"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewQuantity, Mode=TwoWay, StringFormat=F2}" IsEnabled="{Binding StockVM.IsQuantityEditable}"/>
                             <Label Content="Unit Of Measure:"/>
-                            <ComboBox Width="100" ItemsSource="{Binding StockVM.UnitOfMeasures}" SelectedItem="{Binding StockVM.NewUnitOfMeasure, Mode=TwoWay}"/>
+                            <ComboBox Width="100" ItemsSource="{Binding StockVM.UnitOfMeasures}" SelectedItem="{Binding StockVM.NewUnitOfMeasure, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsUnitOfMeasureEditable}"/>
                             <Label Content="Product:"/>
-                            <ComboBox Width="150" ItemsSource="{Binding StockVM.Products}" DisplayMemberPath="ProductName" SelectedItem="{Binding StockVM.NewProduct, Mode=TwoWay}"/>
+                            <ComboBox Width="150" ItemsSource="{Binding StockVM.Products}" DisplayMemberPath="ProductName" SelectedItem="{Binding StockVM.NewProduct, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsAddingNewStock}"/>
                         </WrapPanel>
                         <WrapPanel Margin="10">
                             <Label Content="Supply Date:"/>
-                            <DatePicker Width="150" SelectedDate="{Binding StockVM.NewSupplyDate, Mode=TwoWay}"/>
+                            <DatePicker Width="150" SelectedDate="{Binding StockVM.NewSupplyDate, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsSupplyDateEditable}"/>
                             <Label Content="Expiration Date:"/>
-                            <DatePicker Width="150" SelectedDate="{Binding StockVM.NewExpirationDate, Mode=TwoWay}"/>
+                            <DatePicker Width="150" SelectedDate="{Binding StockVM.NewExpirationDate, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsExpirationDateEditable}"/>
                         </WrapPanel>
                         <WrapPanel Margin="10">
                             <Label Content="Purchase Price:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}" IsReadOnly="{Binding StockVM.IsPurchasePriceReadOnly}"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewPurchasePrice, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsPurchasePriceEditable}"/>
                             <Label Content="Sale Price:"/>
-                            <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}"/>
+                            <TextBox Width="100" Text="{Binding StockVM.NewSalePrice, Mode=TwoWay}" IsEnabled="{Binding StockVM.IsSalePriceEditable}"/>
                             <Button Content="Add Stock" Width="100" Command="{Binding StockVM.AddStockCommand}"/>
                         </WrapPanel>
                         <Button Content="Edit Stock" Width="100" Margin="5" Command="{Binding StockVM.EditStockCommand}"/>
