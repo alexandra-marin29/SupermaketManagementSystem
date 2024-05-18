@@ -38,15 +38,15 @@ namespace Supermarket.ViewModels
         {
             Products = new ObservableCollection<Product>();
             ReceiptDetails = new ObservableCollection<ReceiptDetail>();
-            ProductNames = new ObservableCollection<string>(productBLL.GetAllProducts().Select(p => p.ProductName).Distinct());
-            Barcodes = new ObservableCollection<string>(productBLL.GetAllProducts().Select(p => p.Barcode).Distinct());
+            ProductNames = new ObservableCollection<string>(productBLL.GetProductsInStock().Select(p => p.ProductName).Distinct());
+            Barcodes = new ObservableCollection<string>(productBLL.GetProductsInStock().Select(p => p.Barcode).Distinct());
             Manufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers());
             Categories = new ObservableCollection<Category>(categoryBLL.GetAllCategories());
 
             SearchProductsCommand = new RelayCommand<object>(SearchProducts);
             AddToReceiptCommand = new RelayCommand<object>(AddToReceipt);
             FinalizeReceiptCommand = new RelayCommand<object>(FinalizeReceipt);
-            RemoveFromReceiptCommand = new RelayCommand<ReceiptDetail>(RemoveFromReceipt);
+            RemoveFromReceiptCommand = new RelayCommand<object>(RemoveFromReceipt);
         }
 
         public ObservableCollection<Product> Products
@@ -207,7 +207,8 @@ namespace Supermarket.ViewModels
         private void SearchProducts(object parameter)
         {
             Products.Clear();
-            var productsList = productBLL.SearchProducts(ProductName, Barcode, null, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID);
+            var productsList = productBLL.SearchProducts(ProductName, Barcode, null, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID)
+                .Where(p => stockBLL.GetStocksByProductId(p.ProductID).Any(s => s.Quantity > 0 && s.IsActive == true));
             foreach (var product in productsList)
             {
                 Products.Add(product);
@@ -263,8 +264,9 @@ namespace Supermarket.ViewModels
 
         private void RemoveFromReceipt(object parameter)
         {
-            if (parameter is ReceiptDetail receiptDetail)
+            if (SelectedReceiptDetail != null)
             {
+                var receiptDetail = SelectedReceiptDetail;
                 ReceiptDetails.Remove(receiptDetail);
 
                 var stock = stockBLL.GetStocksByProductId(receiptDetail.ProductID)

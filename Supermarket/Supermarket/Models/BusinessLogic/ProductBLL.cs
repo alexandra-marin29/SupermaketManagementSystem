@@ -15,7 +15,7 @@ namespace Supermarket.Models.BusinessLogic
             return productDAL.GetAllProducts();
         }
 
-        public Product GetProductById(int productId) 
+        public Product GetProductById(int productId)
         {
             return productDAL.GetProductById(productId);
         }
@@ -76,7 +76,6 @@ namespace Supermarket.Models.BusinessLogic
             }
         }
 
-
         public void EditProduct(Product product)
         {
             productDAL.EditProduct(product);
@@ -86,9 +85,15 @@ namespace Supermarket.Models.BusinessLogic
         {
             productDAL.DeleteProduct(productID);
         }
+
         public List<Product> SearchProducts(string productName, string barcode, DateTime? expirationDate, int? manufacturerId, int? categoryId)
         {
             return productDAL.SearchProducts(productName, barcode, expirationDate, manufacturerId, categoryId);
+        }
+
+        public List<Product> GetProductsInStock()
+        {
+            return productDAL.SearchProductsInStock();
         }
     }
 }

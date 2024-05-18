@@ -83,6 +83,37 @@ namespace Supermarket.Models.DataAccessLayer
             cmd.ExecuteNonQuery();
         }
 
+        public List<Product> SearchProductsInStock()
+        {
+            List<Product> products = new List<Product>();
+
+            using (SqlConnection con = DALHelper.Connection)
+            {
+                SqlCommand cmd = new SqlCommand(@"
+                    SELECT p.ProductID, p.ProductName, p.Barcode, p.CategoryID, p.ManufacturerID, p.IsActive
+                    FROM Products p
+                    JOIN ProductStocks ps ON p.ProductID = ps.ProductID
+                    WHERE ps.Quantity > 0 AND ps.IsActive = 1", con);
+                con.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Product product = new Product
+                    {
+                        ProductID = (int)reader["ProductID"],
+                        ProductName = reader["ProductName"].ToString(),
+                        Barcode = reader["Barcode"].ToString(),
+                        CategoryID = reader["CategoryID"] != DBNull.Value ? (int)reader["CategoryID"] : (int?)null,
+                        ManufacturerID = reader["ManufacturerID"] != DBNull.Value ? (int)reader["ManufacturerID"] : (int?)null,
+                        IsActive = (bool)reader["IsActive"]
+                    };
+                    products.Add(product);
+                }
+            }
+
+            return products;
+        }
 
         public void EditProduct(Product product)
         {

@@ -28,5 +28,7 @@ namespace Supermarket.Models.BusinessLogic
         {
             return receiptDAL.SearchProducts(productName, barcode, expirationDate, manufacturerID, categoryID);
         }
+
+
     }
 }
