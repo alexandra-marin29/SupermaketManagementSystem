@@ -150,19 +150,20 @@ namespace Supermarket.ViewModels
 
         private bool ValidateManufacturerInputs(string manufacturerName, string countryOfOrigin)
         {
-            if (string.IsNullOrWhiteSpace(manufacturerName) || !Regex.IsMatch(manufacturerName, @"^[a-zA-Z0-9]+$"))
+            if (string.IsNullOrWhiteSpace(manufacturerName) || !Regex.IsMatch(manufacturerName, @"^[a-zA-Z0-9\s]+$"))
             {
-                MessageBox.Show("Manufacturer name must be non-empty and contain only letters and digits.");
+                MessageBox.Show("Manufacturer name must be non-empty and contain only letters, digits, and spaces.");
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(countryOfOrigin) || !Regex.IsMatch(countryOfOrigin, @"^[a-zA-Z]+$"))
+            if (string.IsNullOrWhiteSpace(countryOfOrigin) || !Regex.IsMatch(countryOfOrigin, @"^[a-zA-Z\s]+$"))
             {
-                MessageBox.Show("Country of origin must be non-empty and contain only letters.");
+                MessageBox.Show("Country of origin must be non-empty and contain only letters and spaces.");
                 return false;
             }
 
             return true;
         }
+
     }
 }

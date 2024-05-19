@@ -118,9 +118,9 @@ namespace Supermarket.ViewModels
 
         private bool ValidateCategoryName(string categoryName)
         {
-            if (string.IsNullOrWhiteSpace(categoryName) || !Regex.IsMatch(categoryName, @"^[a-zA-Z]+$"))
+            if (string.IsNullOrWhiteSpace(categoryName) || !Regex.IsMatch(categoryName, @"^[a-zA-Z\s]+$"))
             {
-                MessageBox.Show("Category name must be non-empty and contain only letters.");
+                MessageBox.Show("Category name must be non-empty and contain only letters and spaces.");
                 return false;
             }
 

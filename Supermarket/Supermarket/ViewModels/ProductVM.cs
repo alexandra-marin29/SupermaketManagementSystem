@@ -242,9 +242,9 @@ namespace Supermarket.ViewModels
 
         private bool ValidateProductInputs(string productName, string barcode, string categoryName)
         {
-            if (string.IsNullOrWhiteSpace(productName) || !Regex.IsMatch(productName, @"^[a-zA-Z]+$"))
+            if (string.IsNullOrWhiteSpace(productName) || !Regex.IsMatch(productName, @"^[a-zA-Z\s]+$"))
             {
-                MessageBox.Show("Product name must be non-empty and contain only letters.");
+                MessageBox.Show("Product name must be non-empty and contain only letters and spaces.");
                 return false;
             }
 
@@ -254,9 +254,9 @@ namespace Supermarket.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(categoryName) || !Regex.IsMatch(categoryName, @"^[a-zA-Z]+$"))
+            if (string.IsNullOrWhiteSpace(categoryName) || !Regex.IsMatch(categoryName, @"^[a-zA-Z\s]+$"))
             {
-                MessageBox.Show("Category name must be non-empty and contain only letters.");
+                MessageBox.Show("Category name must be non-empty and contain only letters and spaces.");
                 return false;
             }
 
