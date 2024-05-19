@@ -11,6 +11,13 @@
         <ctx:CashierVM />
     </Window.DataContext>
 
+    <Window.Resources>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <StackPanel Orientation="Vertical" Margin="10">
             <!-- Product Search Section -->
@@ -55,7 +62,7 @@
                 <StackPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Quantity:" Width="120"/>
-                        <TextBox Width="100" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" />
+                        <TextBox Width="100" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2, ValidatesOnDataErrors=True}" />
                         <Button Content="Add to Receipt" Width="150" Command="{Binding AddToReceiptCommand}" Margin="10,0,0,0"/>
                     </WrapPanel>
                     <ScrollViewer Height="120">

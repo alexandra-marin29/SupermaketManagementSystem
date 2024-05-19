@@ -174,8 +174,6 @@ namespace Supermarket.ViewModels
             }
         }
 
-
-
         public ReceiptDetail SelectedReceiptDetail
         {
             get { return selectedReceiptDetail; }
@@ -191,8 +189,15 @@ namespace Supermarket.ViewModels
             get { return quantity; }
             set
             {
-                quantity = value;
-                NotifyPropertyChanged(nameof(Quantity));
+                if (decimal.TryParse(value.ToString(), out decimal newValue))
+                {
+                    quantity = newValue;
+                    NotifyPropertyChanged(nameof(Quantity));
+                }
+                else
+                {
+                    MessageBox.Show("Invalid quantity format.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -290,8 +295,6 @@ namespace Supermarket.ViewModels
             }
         }
 
-
-
         private void SearchProducts(object parameter)
         {
             Products.Clear();
@@ -302,7 +305,6 @@ namespace Supermarket.ViewModels
                 Products.Add(product);
             }
         }
-
 
         private void AddToReceipt(object parameter)
         {
@@ -333,7 +335,7 @@ namespace Supermarket.ViewModels
 
                         if (stock.Quantity == 0)
                         {
-                            stock.IsActive = false; // Set to inactive when quantity is 0
+                            stock.IsActive = false;
                         }
 
                         stockBLL.EditStock(stock);
@@ -360,7 +362,6 @@ namespace Supermarket.ViewModels
             }
         }
 
-
         private void RemoveFromReceipt(object parameter)
         {
             if (SelectedReceiptDetail != null)
@@ -376,7 +377,7 @@ namespace Supermarket.ViewModels
                     stock.Quantity += receiptDetail.Quantity;
                     if (stock.Quantity == 0)
                     {
-                        stock.IsActive = false; // Set to inactive when quantity is 0
+                        stock.IsActive = false;
                     }
                     else
                     {
@@ -414,4 +415,5 @@ namespace Supermarket.ViewModels
             Quantity = 0;
         }
     }
+
 }
