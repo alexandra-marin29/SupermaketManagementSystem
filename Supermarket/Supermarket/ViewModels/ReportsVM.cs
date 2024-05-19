@@ -120,6 +120,8 @@ namespace Supermarket.ViewModels
             Manufacturers = new ObservableCollection<Manufacturer>(manufacturerBLL.GetAllManufacturers());
             Categories = new ObservableCollection<Category>(categoryBLL.GetAllCategories());
             Cashiers = new ObservableCollection<User>(userBLL.GetAllCashiers());
+            SalesByUser = new ObservableCollection<SalesReport>();
+
 
             ListProductsByManufacturerCommand = new RelayCommand<object>(ListProductsByManufacturer);
             ShowCategoryValuesCommand = new RelayCommand<object>(ShowCategoryValues);
@@ -181,14 +183,15 @@ namespace Supermarket.ViewModels
             stackPanel.Children.Add(new TextBlock { Text = "Select Cashier:", Margin = new Thickness(5) });
 
             var wrapPanel = new WrapPanel();
-            wrapPanel.Children.Add(new ComboBox
+            var cashierComboBox = new ComboBox
             {
                 Width = 150,
                 ItemsSource = Cashiers,
                 DisplayMemberPath = "Username",
-                SelectedItem = SelectedCashier,
                 Margin = new Thickness(5)
-            });
+            };
+            cashierComboBox.SetBinding(ComboBox.SelectedItemProperty, new System.Windows.Data.Binding("SelectedCashier") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
+            wrapPanel.Children.Add(cashierComboBox);
 
             wrapPanel.Children.Add(new TextBlock { Text = "Select Month:", Margin = new Thickness(5) });
 
@@ -197,26 +200,38 @@ namespace Supermarket.ViewModels
                 Width = 150,
                 ItemsSource = new string[]
                 {
-                    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+            "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
                 },
-                SelectedItem = SelectedMonth,
                 Margin = new Thickness(5)
             };
             monthComboBox.SetBinding(ComboBox.SelectedItemProperty, new System.Windows.Data.Binding("SelectedMonth") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
             wrapPanel.Children.Add(monthComboBox);
 
-            wrapPanel.Children.Add(new Button
+            var showButton = new Button
             {
                 Content = "Show Sales by User",
                 Width = 150,
                 Margin = new Thickness(5),
                 Command = ShowSalesByUserCommand
-            });
+            };
+            wrapPanel.Children.Add(showButton);
 
             stackPanel.Children.Add(wrapPanel);
-            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = new DataGrid { AutoGenerateColumns = true, ItemsSource = SalesByUser } });
+
+            var salesDataGrid = new DataGrid
+            {
+                AutoGenerateColumns = true,
+                Height = 150,
+                IsReadOnly = true,
+                ItemsSource = SalesByUser
+            };
+            salesDataGrid.SetBinding(DataGrid.ItemsSourceProperty, new System.Windows.Data.Binding("SalesByUser") { Source = this });
+            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = salesDataGrid });
+
             return stackPanel;
         }
+
+
 
         private FrameworkElement CreateReceiptsView()
         {
@@ -265,8 +280,16 @@ namespace Supermarket.ViewModels
             if (SelectedCashier != null && !string.IsNullOrEmpty(SelectedMonth))
             {
                 int month = DateTime.ParseExact(SelectedMonth, "MMMM", System.Globalization.CultureInfo.InvariantCulture).Month;
-                int year = DateTime.Now.Year; 
+                int year = DateTime.Now.Year;
+
                 SalesByUser = new ObservableCollection<SalesReport>(reportsBLL.GetSalesByUser(SelectedCashier.UserId, month, year));
+
+                if (!(SalesByUser.Count >0))
+                {
+                    MessageBox.Show("No sales records found.");
+                }
+
+
                 NotifyPropertyChanged(nameof(SalesByUser));
             }
         }

@@ -87,10 +87,13 @@ namespace Supermarket.Models.DataAccessLayer
 
                 while (reader.Read())
                 {
+                    DateTime saleDate = reader["ReceiptDate"] != DBNull.Value ? (DateTime)reader["ReceiptDate"] : DateTime.MinValue;
+                    decimal dailyTotal = reader["DailyTotal"] != DBNull.Value ? Convert.ToDecimal(reader["DailyTotal"]) : 0;
+
                     SalesReport sale = new SalesReport
                     {
-                        SaleDate = (DateTime)reader["SaleDate"],
-                        DailyTotal = (decimal)reader["DailyTotal"]
+                        SaleDate = saleDate,
+                        DailyTotal = dailyTotal
                     };
                     sales.Add(sale);
                 }
@@ -98,6 +101,9 @@ namespace Supermarket.Models.DataAccessLayer
 
             return sales;
         }
+
+
+
 
         public List<ReceiptReport> GetLargestReceiptByDate(DateTime date)
         {
