@@ -11,13 +11,6 @@
         <ctx:CashierVM />
     </Window.DataContext>
 
-    <Window.Resources>
-        <Style TargetType="ComboBoxItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-        </Style>
-    </Window.Resources>
-
     <Grid>
         <StackPanel Orientation="Vertical" Margin="10">
             <!-- Product Search Section -->
@@ -25,19 +18,47 @@
                 <StackPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Product Name:" Width="120"/>
-                        <ComboBox Width="150" IsEditable="True" Text="{Binding SelectedProductName, Mode=TwoWay}" ItemsSource="{Binding ProductNames}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding SelectedProductName, Mode=TwoWay}" ItemsSource="{Binding ProductNames}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
                         <Label Content="Barcode:" Width="120" Margin="10,0,0,0"/>
-                        <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode}" ItemsSource="{Binding FilteredBarcodes}" />
+                        <ComboBox Width="150" IsEditable="True" Text="{Binding Barcode}" ItemsSource="{Binding FilteredBarcodes}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
                     </WrapPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Expiration Date:" Width="120"/>
                         <DatePicker SelectedDate="{Binding ExpirationDate}" Width="150"/>
                         <Label Content="Manufacturer:" Width="120" Margin="10,0,0,0"/>
-                        <ComboBox Width="150" ItemsSource="{Binding FilteredManufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}" />
+                        <ComboBox Width="150" ItemsSource="{Binding FilteredManufacturers}" DisplayMemberPath="ManufacturerName" SelectedItem="{Binding SelectedManufacturer}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
                     </WrapPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Category:" Width="120"/>
-                        <ComboBox Width="150" ItemsSource="{Binding FilteredCategories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}" />
+                        <ComboBox Width="150" ItemsSource="{Binding FilteredCategories}" DisplayMemberPath="CategoryName" SelectedItem="{Binding SelectedCategory}">
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
                         <Button Content="Search" Width="100" Command="{Binding SearchProductsCommand}" Margin="10,0,0,0"/>
                     </WrapPanel>
                 </StackPanel>
