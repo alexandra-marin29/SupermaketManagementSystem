@@ -162,9 +162,7 @@ namespace Supermarket.ViewModels
             }
         }
 
-
         private string selectedProductName;
-
         public string SelectedProductName
         {
             get { return selectedProductName; }
@@ -297,13 +295,14 @@ namespace Supermarket.ViewModels
         private void SearchProducts(object parameter)
         {
             Products.Clear();
-            var productsList = productBLL.SearchProducts(ProductName, Barcode, null, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID)
+            var productsList = productBLL.SearchProducts(SelectedProductName, Barcode, null, SelectedManufacturer?.ManufacturerID, SelectedCategory?.CategoryID)
                 .Where(p => stockBLL.GetStocksByProductId(p.ProductID).Any(s => s.Quantity > 0 && s.IsActive == true));
             foreach (var product in productsList)
             {
                 Products.Add(product);
             }
         }
+
 
         private void AddToReceipt(object parameter)
         {

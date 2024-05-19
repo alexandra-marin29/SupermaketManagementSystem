@@ -55,7 +55,7 @@
                 <StackPanel>
                     <WrapPanel Margin="5">
                         <Label Content="Quantity:" Width="120"/>
-                        <TextBox Width="100" Text="{Binding Quantity}" />
+                        <TextBox Width="100" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" />
                         <Button Content="Add to Receipt" Width="150" Command="{Binding AddToReceiptCommand}" Margin="10,0,0,0"/>
                     </WrapPanel>
                     <ScrollViewer Height="120">
