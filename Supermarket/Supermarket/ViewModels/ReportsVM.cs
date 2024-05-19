@@ -241,16 +241,23 @@ namespace Supermarket.ViewModels
             var datePicker = new DatePicker
             {
                 Width = 200,
-                SelectedDate = new DateTime(2024, 1, 1),
-                DisplayDateStart = new DateTime(2024, 1, 1),
-                DisplayDateEnd = new DateTime(2024, 12, 31),
+                SelectedDate = DateTime.Now,
                 Margin = new Thickness(5)
             };
             datePicker.SetBinding(DatePicker.SelectedDateProperty, new System.Windows.Data.Binding("SelectedDate") { Source = this, Mode = System.Windows.Data.BindingMode.TwoWay });
 
             stackPanel.Children.Add(datePicker);
             stackPanel.Children.Add(new Button { Content = "Show Largest Receipt", Width = 200, Margin = new Thickness(5), Command = ShowLargestReceiptCommand });
-            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = new DataGrid { AutoGenerateColumns = true, ItemsSource = LargestReceipt } });
+
+            var dataGrid = new DataGrid
+            {
+                AutoGenerateColumns = true,
+                Height = 150,
+                IsReadOnly = true
+            };
+            dataGrid.SetBinding(DataGrid.ItemsSourceProperty, new System.Windows.Data.Binding("LargestReceipt") { Source = this });
+
+            stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = dataGrid });
             return stackPanel;
         }
 

@@ -127,10 +127,10 @@ namespace Supermarket.Models.DataAccessLayer
                         ReceiptID = (int)reader["ReceiptID"],
                         ReceiptDate = (DateTime)reader["ReceiptDate"],
                         CashierID = (int)reader["CashierID"],
-                        AmountCollected = (decimal)reader["AmountCollected"],
+                        AmountCollected = reader["AmountCollected"] != DBNull.Value ? Convert.ToDecimal(reader["AmountCollected"]) : 0,
                         ProductID = (int)reader["ProductID"],
-                        Quantity = (decimal)reader["Quantity"],
-                        Subtotal = (decimal)reader["Subtotal"]
+                        Quantity = reader["Quantity"] != DBNull.Value ? Convert.ToDecimal(reader["Quantity"]) : 0,
+                        Subtotal = reader["Subtotal"] != DBNull.Value ? Convert.ToDecimal(reader["Subtotal"]) : 0
                     };
                     receipts.Add(receipt);
                 }
@@ -138,5 +138,7 @@ namespace Supermarket.Models.DataAccessLayer
 
             return receipts;
         }
+
+
     }
- }
+}
