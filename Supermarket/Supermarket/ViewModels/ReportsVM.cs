@@ -145,7 +145,7 @@ namespace Supermarket.ViewModels
             };
         }
 
-       
+
 
         private FrameworkElement CreateManufacturerView()
         {
@@ -291,7 +291,7 @@ namespace Supermarket.ViewModels
 
                 SalesByUser = new ObservableCollection<SalesReport>(reportsBLL.GetSalesByUser(SelectedCashier.UserId, month, year));
 
-                if (!(SalesByUser.Count >0))
+                if (!(SalesByUser.Count > 0))
                 {
                     MessageBox.Show("No sales records found.");
                 }
@@ -309,6 +309,7 @@ namespace Supermarket.ViewModels
                 NotifyPropertyChanged(nameof(LargestReceipt));
             }
         }
+
     }
 
     public class ProductReport
@@ -331,15 +332,12 @@ namespace Supermarket.ViewModels
 
     public class ReceiptReport
     {
-        public int SaleID { get; set; }
-        public decimal TotalAmount { get; set; }
-        public int ReceiptID { get; set; }
         public DateTime ReceiptDate { get; set; }
-        public int CashierID { get; set; }
-        public decimal AmountCollected { get; set; }
-        public int ProductID { get; set; }
+        public string CashierName { get; set; }
+        public string ProductNames { get; set; }
         public decimal Quantity { get; set; }
-        public decimal Subtotal { get; set; }
+        public decimal AmountCollected { get; set; }
     }
+
 }
 
