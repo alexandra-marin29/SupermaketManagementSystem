@@ -207,8 +207,8 @@ namespace Supermarket.ViewModels
                 SelectedProduct.Barcode = NewBarcode;
                 SelectedProduct.CategoryID = NewCategory.CategoryID;
                 SelectedProduct.ManufacturerID = NewManufacturer.ManufacturerID;
-                SelectedProduct.CategoryName = NewCategory.CategoryName;  // Set the CategoryName
-                SelectedProduct.ManufacturerName = NewManufacturer.ManufacturerName;  // Set the ManufacturerName
+                SelectedProduct.CategoryName = NewCategory.CategoryName;  
+                SelectedProduct.ManufacturerName = NewManufacturer.ManufacturerName;  
 
                 productBLL.EditProduct(SelectedProduct);
                 int index = Products.IndexOf(SelectedProduct);

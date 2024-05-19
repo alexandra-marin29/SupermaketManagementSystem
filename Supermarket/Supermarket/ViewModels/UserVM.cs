@@ -106,7 +106,7 @@ namespace Supermarket.ViewModels
                 }
                 else
                 {
-                    IsRoleEditable = true; // Default value when no user is selected
+                    IsRoleEditable = true;
                 }
             }
         }
@@ -189,7 +189,7 @@ namespace Supermarket.ViewModels
                 NewUsername = string.Empty;
                 NewPassword = string.Empty;
                 NewRole = string.Empty;
-                IsRoleEditable = true; // Reset to default after adding
+                IsRoleEditable = true;
             }
         }
 
@@ -214,7 +214,7 @@ namespace Supermarket.ViewModels
                     NewPassword = string.Empty;
                     NewRole = string.Empty;
                     SelectedUser = null;
-                    IsRoleEditable = true; // Reset to default after editing
+                    IsRoleEditable = true; 
                 }
                 catch (Exception ex)
                 {
@@ -235,7 +235,7 @@ namespace Supermarket.ViewModels
             {
                 userBLL.DeleteUser(SelectedUser.UserId);
                 Users.Remove(SelectedUser);
-                IsRoleEditable = true; // Reset to default after deleting
+                IsRoleEditable = true; 
             }
         }
 

@@ -189,7 +189,7 @@ namespace Supermarket.ViewModels
                 if (value < NewSupplyDate)
                 {
                     MessageBox.Show("Expiration date cannot be earlier than supply date.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    newExpirationDate = NewSupplyDate;  // Reset to supply date
+                    newExpirationDate = NewSupplyDate;  
                 }
                 else
                 {

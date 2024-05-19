@@ -101,12 +101,12 @@ namespace Supermarket.Models.DataAccessLayer
                     CommandType = CommandType.StoredProcedure
                 };
                 cmd.Parameters.AddWithValue("@StockID", stock.StockID);
-                cmd.Parameters.AddWithValue("@ProductID", stock.ProductID); // Add this line
+                cmd.Parameters.AddWithValue("@ProductID", stock.ProductID); 
                 cmd.Parameters.AddWithValue("@Quantity", stock.Quantity);
                 cmd.Parameters.AddWithValue("@UnitOfMeasure", stock.UnitOfMeasure);
                 cmd.Parameters.AddWithValue("@SupplyDate", stock.SupplyDate);
                 cmd.Parameters.AddWithValue("@ExpirationDate", stock.ExpirationDate);
-                cmd.Parameters.AddWithValue("@PurchasePrice", stock.PurchasePrice); // Add this line
+                cmd.Parameters.AddWithValue("@PurchasePrice", stock.PurchasePrice);
                 cmd.Parameters.AddWithValue("@SalePrice", stock.SalePrice);
                 cmd.Parameters.AddWithValue("@IsActive", (object)stock.IsActive ?? DBNull.Value);
 

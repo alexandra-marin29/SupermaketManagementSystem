@@ -17,7 +17,7 @@ namespace Supermarket.Models.EntityLayer
         private DateTime expirationDate;
         private decimal purchasePrice;
         private decimal salePrice;
-        private bool? isActive; // Updated to bool?
+        private bool? isActive; 
         private string productName;
 
         public int StockID
@@ -100,7 +100,7 @@ namespace Supermarket.Models.EntityLayer
             }
         }
 
-        public bool? IsActive // Updated to bool?
+        public bool? IsActive 
         {
             get { return isActive; }
             set
