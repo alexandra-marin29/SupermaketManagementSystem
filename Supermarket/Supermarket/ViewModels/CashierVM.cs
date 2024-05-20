@@ -30,7 +30,7 @@ namespace Supermarket.ViewModels
 
         private Product selectedProduct;
         private ReceiptDetail selectedReceiptDetail;
-        private decimal quantity;
+        private string quantity;
         private decimal totalAmount;
         private string productName;
         private string barcode;
@@ -184,20 +184,13 @@ namespace Supermarket.ViewModels
             }
         }
 
-        public decimal Quantity
+        public string Quantity
         {
             get { return quantity; }
             set
             {
-                if (decimal.TryParse(value.ToString(), out decimal newValue))
-                {
-                    quantity = newValue;
-                    NotifyPropertyChanged(nameof(Quantity));
-                }
-                else
-                {
-                    MessageBox.Show("Invalid quantity format.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                quantity = value;
+                NotifyPropertyChanged(nameof(Quantity));
             }
         }
 
@@ -308,13 +301,13 @@ namespace Supermarket.ViewModels
 
         private void AddToReceipt(object parameter)
         {
-            if (SelectedProduct != null && Quantity > 0)
+            if (SelectedProduct != null && !string.IsNullOrEmpty(Quantity) && decimal.TryParse(Quantity, out decimal quantity))
             {
                 var existingReceiptDetail = ReceiptDetails.FirstOrDefault(rd => rd.ProductID == SelectedProduct.ProductID);
                 if (existingReceiptDetail != null)
                 {
-                    existingReceiptDetail.Quantity += Quantity;
-                    existingReceiptDetail.Subtotal += existingReceiptDetail.Quantity * existingReceiptDetail.Subtotal / (existingReceiptDetail.Quantity - Quantity);
+                    existingReceiptDetail.Quantity += quantity;
+                    existingReceiptDetail.Subtotal += existingReceiptDetail.Quantity * existingReceiptDetail.Subtotal / (existingReceiptDetail.Quantity - quantity);
                 }
                 else
                 {
@@ -323,7 +316,7 @@ namespace Supermarket.ViewModels
                         .OrderBy(s => s.SupplyDate)
                         .ToList();
 
-                    decimal remainingQuantity = Quantity;
+                    decimal remainingQuantity = quantity;
                     decimal subtotal = 0;
 
                     foreach (var stock in stocks)
@@ -346,7 +339,7 @@ namespace Supermarket.ViewModels
                     {
                         ProductID = SelectedProduct.ProductID,
                         ProductName = SelectedProduct.ProductName,
-                        Quantity = Quantity,
+                        Quantity = quantity,
                         Subtotal = subtotal
                     };
 
@@ -356,9 +349,11 @@ namespace Supermarket.ViewModels
                 TotalAmount = ReceiptDetails.Sum(rd => rd.Subtotal);
                 ClearFields();
             }
+            else
+            {
+                MessageBox.Show("Invalid quantity format.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
-
 
         private void RemoveFromReceipt(object parameter)
         {
@@ -369,7 +364,6 @@ namespace Supermarket.ViewModels
                 ClearFields();
             }
         }
-
 
         private void FinalizeReceipt(object parameter)
         {
@@ -424,8 +418,7 @@ namespace Supermarket.ViewModels
         private void ClearFields()
         {
             SelectedProduct = null;
-            Quantity = 0;
+            Quantity = string.Empty;
         }
     }
-
 }
