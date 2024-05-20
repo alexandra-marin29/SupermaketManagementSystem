@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using Supermarket.Models.EntityLayer;
 using Supermarket.ViewModels;
 
@@ -122,11 +124,14 @@ namespace Supermarket.Models.DataAccessLayer
 
                 while (reader.Read())
                 {
+                    var productNamesString = reader["ProductNames"].ToString();
+                    var productNames = new ObservableCollection<string>(productNamesString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()));
+
                     ReceiptReport receipt = new ReceiptReport
                     {
                         ReceiptDate = (DateTime)reader["ReceiptDate"],
                         CashierName = reader["CashierName"].ToString(),
-                        ProductNames = reader["ProductNames"].ToString(),
+                        ProductNames = productNames,  
                         Quantity = reader["Quantity"] != DBNull.Value ? Convert.ToDecimal(reader["Quantity"]) : 0,
                         AmountCollected = reader["AmountCollected"] != DBNull.Value ? Convert.ToDecimal(reader["AmountCollected"]) : 0
                     };
@@ -136,5 +141,6 @@ namespace Supermarket.Models.DataAccessLayer
 
             return receipts;
         }
+
     }
 }

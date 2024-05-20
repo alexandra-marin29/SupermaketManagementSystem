@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -232,7 +233,6 @@ namespace Supermarket.ViewModels
         }
 
 
-
         private FrameworkElement CreateReceiptsView()
         {
             var stackPanel = new StackPanel();
@@ -251,16 +251,33 @@ namespace Supermarket.ViewModels
 
             var dataGrid = new DataGrid
             {
-                AutoGenerateColumns = true,
+                AutoGenerateColumns = false,
                 Height = 150,
                 IsReadOnly = true
             };
             dataGrid.SetBinding(DataGrid.ItemsSourceProperty, new System.Windows.Data.Binding("LargestReceipt") { Source = this });
 
+            dataGrid.Columns.Add(new DataGridTextColumn { Header = "Receipt Date", Binding = new System.Windows.Data.Binding("ReceiptDate") });
+            dataGrid.Columns.Add(new DataGridTextColumn { Header = "Cashier Name", Binding = new System.Windows.Data.Binding("CashierName") });
+            dataGrid.Columns.Add(new DataGridTextColumn { Header = "Quantity", Binding = new System.Windows.Data.Binding("Quantity") });
+            dataGrid.Columns.Add(new DataGridTextColumn { Header = "Amount Collected", Binding = new System.Windows.Data.Binding("AmountCollected") });
+
+            var productNamesTemplate = new DataTemplate();
+            var comboBoxFactory = new FrameworkElementFactory(typeof(ComboBox));
+            comboBoxFactory.SetBinding(ComboBox.ItemsSourceProperty, new System.Windows.Data.Binding("ProductNames"));
+            comboBoxFactory.SetValue(ComboBox.DisplayMemberPathProperty, "");
+            comboBoxFactory.SetValue(ComboBox.IsReadOnlyProperty, true);
+            productNamesTemplate.VisualTree = comboBoxFactory;
+
+            dataGrid.Columns.Add(new DataGridTemplateColumn
+            {
+                Header = "Product Names",
+                CellTemplate = productNamesTemplate
+            });
+
             stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = dataGrid });
             return stackPanel;
         }
-
 
 
         private void ListProductsByManufacturer(object parameter)
@@ -305,7 +322,14 @@ namespace Supermarket.ViewModels
         {
             if (SelectedDate != null)
             {
-                LargestReceipt = new ObservableCollection<ReceiptReport>(reportsBLL.GetLargestReceiptByDate(SelectedDate));
+                var receiptReports = reportsBLL.GetLargestReceiptByDate(SelectedDate);
+                foreach (var receipt in receiptReports)
+                {
+                    var productNamesString = receipt.ProductNames;
+                    var productNamesList = productNamesString.SelectMany(p => p.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim())).ToList();
+                    receipt.ProductNames = new ObservableCollection<string>(productNamesList);
+                }
+                LargestReceipt = new ObservableCollection<ReceiptReport>(receiptReports);
                 NotifyPropertyChanged(nameof(LargestReceipt));
             }
         }
@@ -334,10 +358,12 @@ namespace Supermarket.ViewModels
     {
         public DateTime ReceiptDate { get; set; }
         public string CashierName { get; set; }
-        public string ProductNames { get; set; }
+        public ObservableCollection<string> ProductNames { get; set; }  
         public decimal Quantity { get; set; }
         public decimal AmountCollected { get; set; }
     }
+
+
 
 }
 
