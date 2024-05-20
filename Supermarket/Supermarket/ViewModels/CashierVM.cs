@@ -324,6 +324,75 @@ namespace Supermarket.ViewModels
                         .ToList();
 
                     decimal remainingQuantity = Quantity;
+                    decimal subtotal = 0;
+
+                    foreach (var stock in stocks)
+                    {
+                        if (remainingQuantity <= 0)
+                            break;
+
+                        decimal deductedQuantity = Math.Min(remainingQuantity, stock.Quantity);
+                        remainingQuantity -= deductedQuantity;
+                        subtotal += deductedQuantity * stock.SalePrice;
+                    }
+
+                    if (remainingQuantity > 0)
+                    {
+                        MessageBox.Show("Insufficient stock.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    var receiptDetail = new ReceiptDetail
+                    {
+                        ProductID = SelectedProduct.ProductID,
+                        ProductName = SelectedProduct.ProductName,
+                        Quantity = Quantity,
+                        Subtotal = subtotal
+                    };
+
+                    ReceiptDetails.Add(receiptDetail);
+                }
+
+                TotalAmount = ReceiptDetails.Sum(rd => rd.Subtotal);
+                ClearFields();
+            }
+        }
+
+
+
+        private void RemoveFromReceipt(object parameter)
+        {
+            if (SelectedReceiptDetail != null)
+            {
+                ReceiptDetails.Remove(SelectedReceiptDetail);
+                TotalAmount = ReceiptDetails.Sum(rd => rd.Subtotal);
+                ClearFields();
+            }
+        }
+
+
+        private void FinalizeReceipt(object parameter)
+        {
+            if (ReceiptDetails.Count > 0)
+            {
+                var receipt = new Receipt
+                {
+                    CashierID = SessionManager.CurrentUser.UserId,
+                    ReceiptDate = DateTime.Now,
+                    AmountCollected = TotalAmount
+                };
+
+                receiptBLL.AddReceipt(receipt, ReceiptDetails.ToList());
+
+                // Adjust stock quantities
+                foreach (var detail in ReceiptDetails)
+                {
+                    var stocks = stockBLL.GetStocksByProductId(detail.ProductID)
+                        .Where(s => s.ExpirationDate > DateTime.Now && s.Quantity > 0)
+                        .OrderBy(s => s.SupplyDate)
+                        .ToList();
+
+                    decimal remainingQuantity = detail.Quantity;
                     foreach (var stock in stocks)
                     {
                         if (remainingQuantity <= 0)
@@ -339,70 +408,13 @@ namespace Supermarket.ViewModels
                         }
 
                         stockBLL.EditStock(stock);
-
-                        var receiptDetail = new ReceiptDetail
-                        {
-                            ProductID = SelectedProduct.ProductID,
-                            ProductName = SelectedProduct.ProductName,
-                            Quantity = deductedQuantity,
-                            Subtotal = deductedQuantity * stock.SalePrice
-                        };
-
-                        ReceiptDetails.Add(receiptDetail);
                     }
 
                     if (remainingQuantity > 0)
                     {
-                        MessageBox.Show("Insufficient stock.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Insufficient stock for product: " + detail.ProductName, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-
-                TotalAmount = ReceiptDetails.Sum(rd => rd.Subtotal);
-                ClearFields();
-            }
-        }
-
-        private void RemoveFromReceipt(object parameter)
-        {
-            if (SelectedReceiptDetail != null)
-            {
-                var receiptDetail = SelectedReceiptDetail;
-                ReceiptDetails.Remove(receiptDetail);
-
-                var stock = stockBLL.GetStocksByProductId(receiptDetail.ProductID)
-                    .FirstOrDefault(s => s.ExpirationDate > DateTime.Now);
-
-                if (stock != null)
-                {
-                    stock.Quantity += receiptDetail.Quantity;
-                    if (stock.Quantity == 0)
-                    {
-                        stock.IsActive = false;
-                    }
-                    else
-                    {
-                        stock.IsActive = true;
-                    }
-                    stockBLL.EditStock(stock);
-                }
-
-                TotalAmount = ReceiptDetails.Sum(rd => rd.Subtotal);
-                ClearFields();
-            }
-        }
-
-        private void FinalizeReceipt(object parameter)
-        {
-            if (ReceiptDetails.Count > 0)
-            {
-                var receipt = new Receipt
-                {
-                    CashierID = SessionManager.CurrentUser.UserId,
-                    ReceiptDate = DateTime.Now,
-                    AmountCollected = TotalAmount
-                };
-
-                receiptBLL.AddReceipt(receipt, ReceiptDetails.ToList());
 
                 ReceiptDetails.Clear();
                 TotalAmount = 0;
