@@ -37,7 +37,7 @@ namespace Supermarket.ViewModels
 
         public ObservableCollection<Stock> Stocks { get; set; }
         public ObservableCollection<Product> Products { get; set; }
-        public ObservableCollection<string> UnitOfMeasures { get; set; }  // New property
+        public ObservableCollection<string> UnitOfMeasures { get; set; } 
 
         public ICommand AddStockCommand { get; }
         public ICommand EditStockCommand { get; }

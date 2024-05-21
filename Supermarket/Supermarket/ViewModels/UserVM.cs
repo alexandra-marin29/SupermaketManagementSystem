@@ -138,7 +138,7 @@ namespace Supermarket.ViewModels
             AddUserCommand = new RelayCommand<object>(AddUser);
             EditUserCommand = new RelayCommand<object>(EditUser);
             DeleteUserCommand = new RelayCommand<object>(DeleteUser);
-            IsRoleEditable = true; // Set default value here
+            IsRoleEditable = true;
         }
 
         public UserVM(Window loginWindow) : this()

@@ -221,16 +221,21 @@ namespace Supermarket.ViewModels
 
             var salesDataGrid = new DataGrid
             {
-                AutoGenerateColumns = true,
+                AutoGenerateColumns = false,
                 Height = 150,
                 IsReadOnly = true,
                 ItemsSource = SalesByUser
             };
             salesDataGrid.SetBinding(DataGrid.ItemsSourceProperty, new System.Windows.Data.Binding("SalesByUser") { Source = this });
+
+            salesDataGrid.Columns.Add(new DataGridTextColumn { Header = "Sale Date", Binding = new System.Windows.Data.Binding("SaleDate") { StringFormat = "dd/MM/yyyy" } });
+            salesDataGrid.Columns.Add(new DataGridTextColumn { Header = "Daily Total", Binding = new System.Windows.Data.Binding("DailyTotal") });
+
             stackPanel.Children.Add(new ScrollViewer { Height = 150, Content = salesDataGrid });
 
             return stackPanel;
         }
+
 
 
         private FrameworkElement CreateReceiptsView()
@@ -257,7 +262,7 @@ namespace Supermarket.ViewModels
             };
             dataGrid.SetBinding(DataGrid.ItemsSourceProperty, new System.Windows.Data.Binding("LargestReceipt") { Source = this });
 
-            dataGrid.Columns.Add(new DataGridTextColumn { Header = "Receipt Date", Binding = new System.Windows.Data.Binding("ReceiptDate") });
+            dataGrid.Columns.Add(new DataGridTextColumn { Header = "Receipt Date", Binding = new System.Windows.Data.Binding("ReceiptDate") { StringFormat = "dd/MM/yyyy" } });
             dataGrid.Columns.Add(new DataGridTextColumn { Header = "Cashier Name", Binding = new System.Windows.Data.Binding("CashierName") });
             dataGrid.Columns.Add(new DataGridTextColumn { Header = "Quantity", Binding = new System.Windows.Data.Binding("Quantity") });
             dataGrid.Columns.Add(new DataGridTextColumn { Header = "Amount Collected", Binding = new System.Windows.Data.Binding("AmountCollected") });
@@ -265,7 +270,6 @@ namespace Supermarket.ViewModels
             var productNamesTemplate = new DataTemplate();
             var comboBoxFactory = new FrameworkElementFactory(typeof(ComboBox));
             comboBoxFactory.SetBinding(ComboBox.ItemsSourceProperty, new System.Windows.Data.Binding("ProductNames"));
-            comboBoxFactory.SetValue(ComboBox.DisplayMemberPathProperty, "");
             comboBoxFactory.SetValue(ComboBox.IsReadOnlyProperty, true);
             productNamesTemplate.VisualTree = comboBoxFactory;
 
