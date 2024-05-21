@@ -378,7 +378,6 @@ namespace Supermarket.ViewModels
 
                 receiptBLL.AddReceipt(receipt, ReceiptDetails.ToList());
 
-                // Adjust stock quantities
                 foreach (var detail in ReceiptDetails)
                 {
                     var stocks = stockBLL.GetStocksByProductId(detail.ProductID)

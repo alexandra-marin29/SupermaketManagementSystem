@@ -148,7 +148,5 @@ namespace Supermarket.Models.DataAccessLayer
             return receipts;
         }
 
-
-
     }
 }

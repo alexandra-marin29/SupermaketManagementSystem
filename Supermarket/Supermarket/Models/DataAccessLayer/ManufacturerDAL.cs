@@ -89,7 +89,6 @@ namespace Supermarket.Models.DataAccessLayer
             }
         }
 
-
         public bool HasProducts(int manufacturerId)
         {
             using (SqlConnection con = DALHelper.Connection)

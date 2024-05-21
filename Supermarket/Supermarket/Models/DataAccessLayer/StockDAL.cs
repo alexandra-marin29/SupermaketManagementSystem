@@ -116,8 +116,6 @@ namespace Supermarket.Models.DataAccessLayer
         }
 
 
-
-
         public void DeleteStock(int stockID)
         {
             using (SqlConnection con = DALHelper.Connection)

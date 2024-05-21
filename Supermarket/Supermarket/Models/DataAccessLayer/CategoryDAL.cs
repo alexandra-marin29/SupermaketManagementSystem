@@ -107,7 +107,6 @@ namespace Supermarket.Models.DataAccessLayer
             }
         }
 
-
         public bool IsCategoryNameExists(string categoryName)
         {
             using (SqlConnection con = DALHelper.Connection)
