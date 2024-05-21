@@ -8,7 +8,7 @@
         Title="AdminWindow" Height="450" Width="800">
 
     <Grid>
-        <TabControl>
+        <TabControl SelectionChanged="TabControl_SelectionChanged">
             <!-- Users Tab -->
             <TabItem Header="Users">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -35,7 +35,7 @@
             </TabItem>
 
             <!-- Categories Tab -->
-            <TabItem Header="Categories">
+            <TabItem Header="Categories" Name="CategoriesTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel>
                         <WrapPanel Margin="10">
@@ -55,7 +55,7 @@
             </TabItem>
 
             <!-- Manufacturers Tab -->
-            <TabItem Header="Manufacturers">
+            <TabItem Header="Manufacturers" Name="ManufacturersTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel>
                         <WrapPanel Margin="10">
@@ -78,7 +78,7 @@
             </TabItem>
 
             <!-- Products Tab -->
-            <TabItem Header="Products">
+            <TabItem Header="Products" Name="ProductsTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel>
                         <!-- First Row: Product Name and Barcode -->
@@ -111,7 +111,7 @@
             </TabItem>
 
             <!-- Stocks Tab -->
-            <TabItem Header="Stocks">
+            <TabItem Header="Stocks" Name="StocksTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel>
                         <WrapPanel Margin="10">
@@ -153,7 +153,7 @@
             </TabItem>
 
             <!-- Reports Tab -->
-            <TabItem Header="Reports">
+            <TabItem Header="Reports" Name="ReportsTab">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <StackPanel Margin="10">
                         <TextBlock Text="Select Report:" Margin="5"/>
@@ -162,7 +162,6 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-
         </TabControl>
     </Grid>
 </Window>

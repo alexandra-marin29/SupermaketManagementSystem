@@ -64,6 +64,15 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public void RefreshManufacturers()
+        {
+            Manufacturers.Clear();
+            foreach (var manufacturer in manufacturerBLL.GetAllManufacturers())
+            {
+                Manufacturers.Add(manufacturer);
+            }
+        }
+
         private void AddManufacturer(object parameter)
         {
             if (ValidateManufacturerInputs(NewManufacturerName, NewCountryOfOrigin))

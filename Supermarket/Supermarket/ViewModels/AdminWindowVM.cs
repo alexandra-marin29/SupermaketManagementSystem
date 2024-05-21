@@ -21,7 +21,9 @@ namespace Supermarket.Views
             StockVM = new StockVM();
             ManufacturerVM = new ManufacturerVM();
             ReportsVM = new ReportsVM();
+
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -52,6 +52,15 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public void RefreshCategories()
+        {
+            Categories.Clear();
+            foreach (var category in categoryBLL.GetAllCategories())
+            {
+                Categories.Add(category);
+            }
+        }
+
         private void AddCategory(object parameter)
         {
             if (ValidateCategoryName(NewCategoryName))
@@ -74,7 +83,7 @@ namespace Supermarket.ViewModels
         {
             if (SelectedCategory != null && ValidateCategoryName(NewCategoryName))
             {
-                string originalCategoryName = SelectedCategory.CategoryName; 
+                string originalCategoryName = SelectedCategory.CategoryName;
 
                 try
                 {

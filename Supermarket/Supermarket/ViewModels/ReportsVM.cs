@@ -147,6 +147,27 @@ namespace Supermarket.ViewModels
         }
 
 
+        public void RefreshReports()
+        {
+            Manufacturers.Clear();
+            foreach (var manufacturer in manufacturerBLL.GetAllManufacturers())
+            {
+                Manufacturers.Add(manufacturer);
+            }
+
+            Categories.Clear();
+            foreach (var category in categoryBLL.GetAllCategories())
+            {
+                Categories.Add(category);
+            }
+
+            Cashiers.Clear();
+            foreach (var cashier in userBLL.GetAllCashiers())
+            {
+                Cashiers.Add(cashier);
+            }
+        }
+
 
         private FrameworkElement CreateManufacturerView()
         {

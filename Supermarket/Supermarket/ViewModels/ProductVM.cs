@@ -122,6 +122,28 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public void RefreshProducts()
+        {
+            Products.Clear();
+            foreach (var product in productBLL.GetAllProducts())
+            {
+                Products.Add(product);
+            }
+
+            Categories.Clear();
+            foreach (var category in categoryBLL.GetAllCategories())
+            {
+                Categories.Add(category);
+            }
+
+            Manufacturers.Clear();
+            foreach (var manufacturer in manufacturerBLL.GetAllManufacturers())
+            {
+                Manufacturers.Add(manufacturer);
+            }
+        }
+
+
         private void AddProduct(object parameter)
         {
             if (ValidateProductInputs(NewProductName, NewBarcode, NewCategoryName))

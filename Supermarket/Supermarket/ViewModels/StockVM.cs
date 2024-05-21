@@ -255,6 +255,23 @@ namespace Supermarket.ViewModels
             }
         }
 
+        public void RefreshStocks()
+        {
+            Stocks.Clear();
+            foreach (var stock in stockBLL.GetAllStocks())
+            {
+                stock.ProductName = productBLL.GetProductById(stock.ProductID).ProductName;
+                Stocks.Add(stock);
+            }
+
+            Products.Clear();
+            foreach (var product in productBLL.GetAllProducts())
+            {
+                Products.Add(product);
+            }
+        }
+
+
         private void AddStock(object parameter)
         {
             if (NewProduct != null && NewPurchasePrice > 0)
