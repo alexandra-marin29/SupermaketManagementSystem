@@ -105,8 +105,6 @@ namespace Supermarket.Models.DataAccessLayer
         }
 
 
-
-
         public List<ReceiptReport> GetLargestReceiptByDate(DateTime date)
         {
             List<ReceiptReport> receipts = new List<ReceiptReport>();
@@ -124,14 +122,22 @@ namespace Supermarket.Models.DataAccessLayer
 
                 while (reader.Read())
                 {
-                    var productNamesString = reader["ProductNames"].ToString();
-                    var productNames = new ObservableCollection<string>(productNamesString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()));
+                    var productDetailsString = reader["ProductDetails"].ToString();
+                    var productDetails = productDetailsString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(p => p.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries))
+                        .Where(parts => parts.Length == 2)
+                        .Select(parts => new ProductDetail
+                        {
+                            ProductName = parts[0].Trim(),
+                            Subtotal = decimal.TryParse(parts[1].Trim(), out var subtotal) ? subtotal : 0
+                        })
+                        .ToList();
 
                     ReceiptReport receipt = new ReceiptReport
                     {
                         ReceiptDate = (DateTime)reader["ReceiptDate"],
                         CashierName = reader["CashierName"].ToString(),
-                        ProductNames = productNames,  
+                        ProductDetails = new ObservableCollection<ProductDetail>(productDetails),
                         Quantity = reader["Quantity"] != DBNull.Value ? Convert.ToDecimal(reader["Quantity"]) : 0,
                         AmountCollected = reader["AmountCollected"] != DBNull.Value ? Convert.ToDecimal(reader["AmountCollected"]) : 0
                     };
@@ -141,6 +147,8 @@ namespace Supermarket.Models.DataAccessLayer
 
             return receipts;
         }
+
+
 
     }
 }
